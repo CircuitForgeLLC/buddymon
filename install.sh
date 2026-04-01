@@ -82,6 +82,13 @@ if key in d.get('enabledPlugins', {}):
 PYEOF
     fi
 
+    # Remove marketplace plugin symlink
+    MARKETPLACE_PLUGIN_DIR="${PLUGINS_DIR}/marketplaces/${MARKETPLACE}/plugins/${PLUGIN_NAME}"
+    if [[ -L "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}" ]]; then
+        rm "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}"
+        ok "Removed marketplace symlink"
+    fi
+
     echo ""
     echo "✓  ${PLUGIN_KEY} uninstalled. Restart Claude Code to apply."
 }
@@ -99,6 +106,39 @@ install() {
         || die "Missing .claude-plugin/plugin.json — run from the buddymon repo root"
     [[ -f "${REPO_DIR}/hooks/hooks.json" ]] \
         || die "Missing hooks/hooks.json"
+
+    # Register 'local' marketplace so CC doesn't GC the cache entry on reload
+    KNOWN_MARKETPLACES="${PLUGINS_DIR}/known_marketplaces.json"
+    MARKETPLACE_DIR="${PLUGINS_DIR}/marketplaces/${MARKETPLACE}"
+    python3 << PYEOF
+import json, os
+from datetime import datetime, timezone
+
+f = '${KNOWN_MARKETPLACES}'
+try:
+    d = json.load(open(f))
+except FileNotFoundError:
+    d = {}
+
+if 'local' not in d:
+    d['local'] = {
+        "source": {"source": "local", "path": '${MARKETPLACE_DIR}'},
+        "installLocation": '${MARKETPLACE_DIR}',
+        "lastUpdated": datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
+    }
+    json.dump(d, open(f, 'w'), indent=2)
+    print("   Registered 'local' marketplace")
+else:
+    print("   'local' marketplace already registered")
+PYEOF
+
+    # Symlink repo into marketplace plugins dir (so CC can discover it)
+    MARKETPLACE_PLUGIN_DIR="${MARKETPLACE_DIR}/plugins/${PLUGIN_NAME}"
+    mkdir -p "${MARKETPLACE_PLUGIN_DIR}"
+    if [[ ! -L "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}" ]]; then
+        ln -sf "${REPO_DIR}" "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}"
+        ok "Linked into marketplace dir"
+    fi
 
     # Create cache parent dir
     mkdir -p "$(dirname "${CACHE_DIR}")"
