@@ -20,7 +20,7 @@ build_context() {
     if [[ "$(buddymon_starter_chosen)" == "false" ]]; then
         ctx="## 🐾 Buddymon — First Encounter!\n\n"
         ctx+="Thrumble here! You don't have a Buddymon yet. Three starters are waiting.\n\n"
-        ctx+='Run `/buddymon-start` to choose your starter and begin collecting!\n\n'
+        ctx+='Run `/buddymon start` to choose your starter and begin collecting!\n\n'
         ctx+='**Starters available:** 🔥 Pyrobyte (Speedrunner) · 🔍 Debuglin (Tester) · ✂️  Minimox (Cleaner)'
         echo "${ctx}"
         return
@@ -29,8 +29,8 @@ build_context() {
     # ── No buddy assigned to this session ─────────────────────────────────
     if [[ -z "${ACTIVE_ID}" ]]; then
         ctx="## 🐾 Buddymon\n\n"
-        ctx+="No buddy assigned to this session. Run \`/buddymon-assign <name>\` to assign one.\n"
-        ctx+="Run \`/buddymon\` to see your roster."
+        ctx+="No buddy assigned to this session. Run \`/buddymon assign <name>\` to assign one.\n"
+        ctx+="Run \`/buddymon roster\` to see your roster."
         echo "${ctx}"
         return
     fi
