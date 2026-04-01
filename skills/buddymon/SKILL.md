@@ -127,9 +127,12 @@ Show challenge proposal with Accept / Decline / Reroll.
 
 ## `fight` — Fight Encounter
 
-Read `encounters.json` → `active_encounter`. If none: "No active encounter."
+**Note:** Encounters auto-resolve when a clean Bash run (no matching error patterns) is detected.
+Use `/buddymon fight` when the error was fixed outside Bash (e.g., in a config file) or to manually confirm a fix.
 
-Show encounter state. Confirm the user has actually fixed the bug.
+Read `encounters.json` → `active_encounter`. If none: "No active encounter — it may have already been auto-resolved."
+
+Show encounter state. Confirm the user has fixed the bug.
 
 On confirm:
 ```python
