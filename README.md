@@ -15,24 +15,60 @@ Buddymon are discovered, caught, and leveled up through real development work �
 
 ---
 
+## Requirements
+
+- [Claude Code](https://claude.ai/code) CLI
+- Python 3 (already required by Claude Code)
+- bash
+
+---
+
 ## Install
 
+Clone the repo anywhere and run the install script:
+
 ```bash
-# From the Claude Code marketplace (once listed):
-/install buddymon
-
-# Or manually — clone and add to your project's .claude/settings.json:
-git clone https://git.opensourcesolarpunk.com/Circuit-Forge/buddymon.git ~/.claude/plugins/local/buddymon
+git clone https://git.opensourcesolarpunk.com/Circuit-Forge/buddymon.git
+cd buddymon
+bash install.sh
 ```
 
-Then add to `~/.claude/settings.json`:
-```json
-{
-  "enabledPlugins": {
-    "buddymon@local": true
-  }
-}
+Then **restart Claude Code** and run:
+
 ```
+/buddymon start
+```
+
+The install script:
+- Symlinks the repo into `~/.claude/plugins/cache/local/buddymon/0.1.0/`
+- Registers the plugin in `~/.claude/plugins/installed_plugins.json`
+- Enables it in `~/.claude/settings.json`
+- Creates `~/.claude/buddymon/` state directory with initial JSON files
+
+Because it uses a symlink, any `git pull` in the repo is immediately live — no reinstall needed.
+
+### Mirrors
+
+You can clone from any of the three remotes:
+
+```bash
+# Forgejo (primary)
+git clone https://git.opensourcesolarpunk.com/Circuit-Forge/buddymon.git
+
+# GitHub
+git clone https://github.com/CircuitForgeLLC/buddymon.git
+
+# Codeberg
+git clone https://codeberg.org/CircuitForge/buddymon.git
+```
+
+### Uninstall
+
+```bash
+bash install.sh --uninstall
+```
+
+Removes the symlink, deregisters from `installed_plugins.json`, and removes the `enabledPlugins` entry. Your `~/.claude/buddymon/` state (roster, XP, encounters) is left intact.
 
 ---
 
@@ -95,14 +131,6 @@ All state lives in `~/.claude/buddymon/` — never in the repo.
 ├── active.json        # current session assignment + challenge
 └── session.json       # session stats (reset each session)
 ```
-
----
-
-## Mirrors
-
-- **Primary:** https://git.opensourcesolarpunk.com/Circuit-Forge/buddymon
-- **GitHub:** https://github.com/CircuitForgeLLC/buddymon
-- **Codeberg:** https://codeberg.org/CircuitForge/buddymon
 
 ---
 
