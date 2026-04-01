@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local state (lives in ~/.claude/buddymon/, not the repo)
+*.local.json

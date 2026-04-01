@@ -1,0 +1,417 @@
+{
+  "_version": 1,
+  "_note": "Master species catalog. discovered=false entries are hidden until triggered.",
+
+  "bug_monsters": {
+    "NullWraith": {
+      "id": "NullWraith",
+      "display": "👻 NullWraith",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 20,
+      "xp_reward": 40,
+      "catchable": true,
+      "description": "Spawned from the void between variables. Fast, slippery, embarrassing.",
+      "error_patterns": [
+        "NoneType.*has no attribute",
+        "Cannot read propert.*of null",
+        "Cannot read propert.*of undefined",
+        "AttributeError.*NoneType",
+        "null pointer",
+        "NullPointerException",
+        "null reference"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 20},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "It was there this whole time. You just never checked."
+    },
+    "FencepostDemon": {
+      "id": "FencepostDemon",
+      "display": "😈 FencepostDemon",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 25,
+      "xp_reward": 45,
+      "catchable": true,
+      "description": "Born from a fence with one too many posts. Or was it one too few?",
+      "error_patterns": [
+        "index.*out of.*range",
+        "IndexError",
+        "ArrayIndexOutOfBounds",
+        "list index out of range",
+        "index out of bounds",
+        "off.by.one"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 20},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "Always one step ahead. Or behind. It's hard to tell."
+    },
+    "TypeGreml": {
+      "id": "TypeGreml",
+      "display": "🔧 TypeGreml",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 25,
+      "xp_reward": 50,
+      "catchable": true,
+      "description": "Sneaks in through loose type annotations. Multiplies in dynamic languages.",
+      "error_patterns": [
+        "TypeError",
+        "type error",
+        "expected.*got.*instead",
+        "cannot.*convert.*to",
+        "incompatible types",
+        "type.*is not assignable"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 20},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "It only attacks when you're absolutely sure about the type."
+    },
+    "SyntaxSerpent": {
+      "id": "SyntaxSerpent",
+      "display": "🐍 SyntaxSerpent",
+      "type": "bug_monster",
+      "rarity": "very_common",
+      "base_strength": 10,
+      "xp_reward": 20,
+      "catchable": true,
+      "description": "The most ancient and humble of all bug monsters. Extremely weak.",
+      "error_patterns": [
+        "SyntaxError",
+        "syntax error",
+        "unexpected token",
+        "unexpected indent",
+        "invalid syntax",
+        "parse error",
+        "ParseError"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 30},
+        {"action": "add_documenting_comment", "strength_reduction": 20}
+      ],
+      "flavor": "You'll be embarrassed you let this one survive long enough to catch."
+    },
+    "CORSCurse": {
+      "id": "CORSCurse",
+      "display": "🌐 CORSCurse",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 40,
+      "xp_reward": 60,
+      "catchable": true,
+      "description": "Every web developer has met this one. It never gets less annoying.",
+      "error_patterns": [
+        "CORS",
+        "Cross-Origin",
+        "cross origin",
+        "Access-Control-Allow-Origin",
+        "has been blocked by CORS policy",
+        "No 'Access-Control-Allow-Origin'"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 25},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "It's not your fault. Well. It kind of is."
+    },
+    "LoopLich": {
+      "id": "LoopLich",
+      "display": "♾️  LoopLich",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 60,
+      "xp_reward": 100,
+      "catchable": true,
+      "description": "It never stops. It never sleeps. It was running before you got there.",
+      "error_patterns": [
+        "infinite loop",
+        "timeout",
+        "Timeout",
+        "ETIMEDOUT",
+        "execution timed out",
+        "recursion limit",
+        "RecursionError",
+        "maximum recursion depth",
+        "stack overflow",
+        "StackOverflow"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 25},
+        {"action": "add_documenting_comment", "strength_reduction": 15}
+      ],
+      "flavor": "The exit condition was always there. You just never believed in it."
+    },
+    "RacePhantom": {
+      "id": "RacePhantom",
+      "display": "👁️  RacePhantom",
+      "type": "bug_monster",
+      "rarity": "rare",
+      "base_strength": 80,
+      "xp_reward": 200,
+      "catchable": true,
+      "description": "Appears only when two threads reach the same place at the same time. Almost impossible to reproduce.",
+      "error_patterns": [
+        "race condition",
+        "concurrent modification",
+        "deadlock",
+        "ConcurrentModificationException",
+        "data race",
+        "mutex",
+        "thread.*conflict",
+        "async.*conflict"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 15},
+        {"action": "isolate_reproduction", "strength_reduction": 30},
+        {"action": "add_documenting_comment", "strength_reduction": 15}
+      ],
+      "flavor": "You've proven it exists. That's honestly impressive on its own."
+    },
+    "FossilGolem": {
+      "id": "FossilGolem",
+      "display": "🗿 FossilGolem",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 35,
+      "xp_reward": 70,
+      "catchable": true,
+      "description": "Ancient. Slow. Stubbornly still in production. Always catchable, never fully defeatable.",
+      "error_patterns": [
+        "deprecated",
+        "DeprecationWarning",
+        "was deprecated",
+        "will be removed",
+        "is deprecated",
+        "no longer supported",
+        "legacy"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 20},
+        {"action": "add_documenting_comment", "strength_reduction": 20}
+      ],
+      "flavor": "It survived every major version. It will outlast you."
+    },
+    "ShadowBit": {
+      "id": "ShadowBit",
+      "display": "🔒 ShadowBit",
+      "type": "bug_monster",
+      "rarity": "rare",
+      "base_strength": 90,
+      "xp_reward": 300,
+      "catchable": true,
+      "defeatable": false,
+      "catch_requires": ["write_failing_test", "isolate_reproduction", "add_documenting_comment"],
+      "description": "Cannot be defeated — only properly contained. Requires full documentation + patching.",
+      "error_patterns": [
+        "vulnerability",
+        "CVE-",
+        "security",
+        "injection",
+        "XSS",
+        "CSRF",
+        "SQL injection",
+        "command injection",
+        "path traversal",
+        "hardcoded.*secret",
+        "hardcoded.*password",
+        "hardcoded.*token"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 25},
+        {"action": "isolate_reproduction", "strength_reduction": 35},
+        {"action": "add_documenting_comment", "strength_reduction": 20}
+      ],
+      "flavor": "Defeat is not an option. Containment is the only victory."
+    },
+    "VoidSpecter": {
+      "id": "VoidSpecter",
+      "display": "🌫️  VoidSpecter",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 20,
+      "xp_reward": 35,
+      "catchable": true,
+      "description": "Haunts missing endpoints. The URL was real once. You just can't prove it.",
+      "error_patterns": [
+        "404",
+        "Not Found",
+        "ENOENT",
+        "No such file",
+        "File not found",
+        "route.*not found",
+        "endpoint.*not found"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 25},
+        {"action": "isolate_reproduction", "strength_reduction": 25},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "It used to exist. Probably."
+    },
+    "MemoryLeech": {
+      "id": "MemoryLeech",
+      "display": "🩸 MemoryLeech",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 55,
+      "xp_reward": 110,
+      "catchable": true,
+      "description": "Slow. Patient. Feeds on RAM one byte at a time. You won't notice until it's too late.",
+      "error_patterns": [
+        "MemoryError",
+        "out of memory",
+        "OOM",
+        "heap.*exhausted",
+        "memory leak",
+        "Cannot allocate memory",
+        "Killed.*memory"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 30},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "It was already there when you opened the task manager."
+    }
+  },
+
+  "buddymon": {
+    "Pyrobyte": {
+      "id": "Pyrobyte",
+      "display": "🔥 Pyrobyte",
+      "type": "buddymon",
+      "affinity": "Speedrunner",
+      "rarity": "starter",
+      "description": "Moves fast, thinks faster. Loves tight deadlines and feature sprints.",
+      "discover_trigger": {"type": "starter", "index": 0},
+      "base_stats": {"power": 40, "catch_rate": 0.45, "xp_multiplier": 1.2},
+      "affinity_bonus_triggers": ["fast_feature", "short_session_win"],
+      "challenges": [
+        {"name": "SPEED RUN", "description": "Implement a feature in under 30 minutes", "xp": 280, "difficulty": 3},
+        {"name": "BLITZ", "description": "Resolve 3 bug monsters in one session", "xp": 350, "difficulty": 4}
+      ],
+      "evolutions": [
+        {"level": 10, "into": "Infernus", "requires": "affinity_challenge_x3"}
+      ],
+      "flavor": "It already committed before you finished reading the issue."
+    },
+    "Debuglin": {
+      "id": "Debuglin",
+      "display": "🔍 Debuglin",
+      "type": "buddymon",
+      "affinity": "Tester",
+      "rarity": "starter",
+      "description": "Patient, methodical, ruthless. Lives for the reproduction case.",
+      "discover_trigger": {"type": "starter", "index": 1},
+      "base_stats": {"power": 35, "catch_rate": 0.60, "xp_multiplier": 1.0},
+      "affinity_bonus_triggers": ["write_test", "fix_bug_with_test"],
+      "challenges": [
+        {"name": "IRON TEST", "description": "Write 5 tests in one session", "xp": 300, "difficulty": 2},
+        {"name": "COVERAGE PUSH", "description": "Increase test coverage in a file", "xp": 250, "difficulty": 2}
+      ],
+      "evolutions": [
+        {"level": 10, "into": "Verifex", "requires": "affinity_challenge_x3"}
+      ],
+      "flavor": "The bug isn't found until the test is written."
+    },
+    "Minimox": {
+      "id": "Minimox",
+      "display": "✂️  Minimox",
+      "type": "buddymon",
+      "affinity": "Cleaner",
+      "rarity": "starter",
+      "description": "Obsessed with fewer lines. Gets uncomfortable around anything over 300 LOC.",
+      "discover_trigger": {"type": "starter", "index": 2},
+      "base_stats": {"power": 30, "catch_rate": 0.50, "xp_multiplier": 1.1},
+      "affinity_bonus_triggers": ["net_negative_lines", "refactor_session"],
+      "challenges": [
+        {"name": "CLEAN RUN", "description": "Complete session with zero linter errors", "xp": 340, "difficulty": 2},
+        {"name": "SHRINK", "description": "Net negative lines of code this session", "xp": 280, "difficulty": 3}
+      ],
+      "evolutions": [
+        {"level": 10, "into": "Nullex", "requires": "affinity_challenge_x3"}
+      ],
+      "flavor": "It deleted your comment. It was redundant."
+    },
+    "Noctara": {
+      "id": "Noctara",
+      "display": "🌙 Noctara",
+      "type": "buddymon",
+      "affinity": "Nocturnal",
+      "rarity": "rare",
+      "description": "Only appears after 10pm. Mysterious. Gives bonus XP for late-night focus runs.",
+      "discover_trigger": {"type": "late_night_session", "hours_after": 22, "min_hours": 2},
+      "base_stats": {"power": 55, "catch_rate": 0.35, "xp_multiplier": 1.5},
+      "affinity_bonus_triggers": ["late_night_session", "deep_focus"],
+      "challenges": [
+        {"name": "MIDNIGHT RUN", "description": "3-hour session after 10pm", "xp": 500, "difficulty": 4},
+        {"name": "DAWN COMMIT", "description": "Commit between 2am and 5am", "xp": 400, "difficulty": 3}
+      ],
+      "evolutions": [
+        {"level": 15, "into": "Umbravex", "requires": "nocturnal_sessions_x5"}
+      ],
+      "flavor": "It remembers everything you wrote at 2am. Everything."
+    },
+    "Explorah": {
+      "id": "Explorah",
+      "display": "🗺️  Explorah",
+      "type": "buddymon",
+      "affinity": "Explorer",
+      "rarity": "uncommon",
+      "description": "Discovered when you touch a new language for the first time. Thrives on novelty.",
+      "discover_trigger": {"type": "new_language"},
+      "base_stats": {"power": 45, "catch_rate": 0.50, "xp_multiplier": 1.2},
+      "affinity_bonus_triggers": ["new_language", "new_library", "touch_new_module"],
+      "challenges": [
+        {"name": "EXPEDITION", "description": "Touch 3 different modules in one session", "xp": 260, "difficulty": 2},
+        {"name": "POLYGLOT", "description": "Write in 2 different languages in one session", "xp": 380, "difficulty": 4}
+      ],
+      "evolutions": [
+        {"level": 12, "into": "Wandervex", "requires": "new_languages_x5"}
+      ],
+      "flavor": "It's already halfway through the new framework docs."
+    }
+  },
+
+  "evolutions": {
+    "Infernus": {
+      "id": "Infernus",
+      "display": "🌋 Infernus",
+      "type": "buddymon",
+      "evolves_from": "Pyrobyte",
+      "affinity": "Speedrunner",
+      "description": "Evolved form of Pyrobyte. Moves at dangerous speeds.",
+      "base_stats": {"power": 70, "catch_rate": 0.55, "xp_multiplier": 1.5}
+    },
+    "Verifex": {
+      "id": "Verifex",
+      "display": "🔬 Verifex",
+      "type": "buddymon",
+      "evolves_from": "Debuglin",
+      "affinity": "Tester",
+      "description": "Evolved form of Debuglin. Sees the bug before the code is even written.",
+      "base_stats": {"power": 60, "catch_rate": 0.75, "xp_multiplier": 1.3}
+    },
+    "Nullex": {
+      "id": "Nullex",
+      "display": "🕳️  Nullex",
+      "type": "buddymon",
+      "evolves_from": "Minimox",
+      "affinity": "Cleaner",
+      "description": "Evolved form of Minimox. Has achieved true minimalism. The file was always one function.",
+      "base_stats": {"power": 55, "catch_rate": 0.65, "xp_multiplier": 1.4}
+    }
+  }
+}

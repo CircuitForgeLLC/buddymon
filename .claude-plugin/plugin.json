@@ -1,0 +1,16 @@
+{
+  "name": "buddymon",
+  "version": "0.1.0",
+  "description": "Collectible creatures discovered through coding — commit streaks, bug fights, and session challenges",
+  "author": {
+    "name": "CircuitForge LLC",
+    "email": "hello@circuitforge.tech",
+    "url": "https://circuitforge.tech"
+  },
+  "license": "MIT",
+  "repository": {
+    "primary": "https://git.opensourcesolarpunk.com/Circuit-Forge/buddymon",
+    "github": "https://github.com/CircuitForgeLLC/buddymon",
+    "codeberg": "https://codeberg.org/CircuitForge/buddymon"
+  }
+}
