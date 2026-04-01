@@ -135,6 +135,50 @@ def match_bug_monster(output_text: str, catalog: dict) -> dict | None:
     return None
 
 
+def encounter_still_present(encounter: dict, output_text: str, catalog: dict) -> bool:
+    """Return True if the active encounter's error patterns still appear in output."""
+    monster_id = encounter.get("id")
+    monster = catalog.get("bug_monsters", {}).get(monster_id)
+    if not monster or not output_text:
+        return False
+    sample = output_text[:4000]
+    return any(
+        re.search(pat, sample, re.IGNORECASE)
+        for pat in monster.get("error_patterns", [])
+    )
+
+
+def auto_resolve_encounter(encounter: dict, buddy_id: str | None) -> tuple[int, str]:
+    """Defeat encounter automatically, award XP, clear state. Returns (xp, message)."""
+    from datetime import datetime, timezone
+
+    enc_file = BUDDYMON_DIR / "encounters.json"
+    active_file = BUDDYMON_DIR / "active.json"
+    roster_file = BUDDYMON_DIR / "roster.json"
+
+    xp = encounter.get("xp_reward", 50)
+
+    active = load_json(active_file)
+    active["session_xp"] = active.get("session_xp", 0) + xp
+    save_json(active_file, active)
+
+    if buddy_id:
+        roster = load_json(roster_file)
+        if buddy_id in roster.get("owned", {}):
+            roster["owned"][buddy_id]["xp"] = roster["owned"][buddy_id].get("xp", 0) + xp
+            save_json(roster_file, roster)
+
+    data = load_json(enc_file)
+    resolved = dict(encounter)
+    resolved["outcome"] = "defeated"
+    resolved["timestamp"] = datetime.now(timezone.utc).isoformat()
+    data.setdefault("history", []).append(resolved)
+    data["active_encounter"] = None
+    save_json(enc_file, data)
+
+    return xp, resolved["display"]
+
+
 def compute_strength(monster: dict, elapsed_minutes: float) -> int:
     """Scale monster strength based on how long the error has persisted."""
     base = monster.get("base_strength", 50)
@@ -175,7 +219,7 @@ def format_encounter_message(monster: dict, strength: int, buddy_display: str) -
         "   `[CATCH]` Weaken it first (write a test, isolate repro, add comment) → attempt catch",
         "   `[FLEE]`  Ignore → monster grows stronger",
         "",
-        "   Use `/buddymon-fight` or `/buddymon-catch` to engage.",
+        "   Use `/buddymon fight` or `/buddymon catch` to weaken + catch it.",
     ]
     return "\n".join(lines)
 
@@ -232,7 +276,7 @@ def main():
 
     messages = []
 
-    # ── Bash tool: error detection + commit tracking ───────────────────────
+    # ── Bash tool: error detection + auto-resolution + commit tracking ───────
     if tool_name == "Bash":
         output = ""
         if isinstance(tool_response, dict):
@@ -240,13 +284,22 @@ def main():
         elif isinstance(tool_response, str):
             output = tool_response
 
-        # Don't spawn new encounter if one is already active
         existing = get_active_encounter()
 
-        if not existing and output:
+        if existing:
+            # Auto-resolve if the monster's patterns no longer appear in output
+            if output and not encounter_still_present(existing, output, catalog):
+                xp, display = auto_resolve_encounter(existing, buddy_id)
+                messages.append(
+                    f"\n⚔️  **{buddy_display} defeated {display}!** (auto-resolved)\n"
+                    f"   +{xp} XP\n"
+                )
+            # else: monster persists, no message — don't spam every tool call
+        elif output:
+            # No active encounter — check for a new one
             monster = match_bug_monster(output, catalog)
             if monster:
-                # 70% chance to trigger (avoid every minor warning spawning)
+                # 70% chance to trigger (avoids every minor warning spawning)
                 if random.random() < 0.70:
                     strength = compute_strength(monster, elapsed_minutes=0)
                     encounter = {
