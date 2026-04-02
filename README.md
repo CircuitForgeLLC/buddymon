@@ -4,7 +4,13 @@ A Claude Code **extension** that turns your coding sessions into a creature-coll
 
 Buddymon are discovered, caught, and leveled up through real development work — not separate from it.
 
-> **How it works:** Buddymon uses Claude Code's hook and plugin system — it is not a UI mod. Notifications (encounters, XP, session summaries) appear as system-injected context in the chat thread. They are visible to Claude and displayed in the conversation, but do not appear in a separate UI widget. This is a deliberate constraint of CC's extension API.
+> **How it works:** Buddymon uses Claude Code's hook and plugin system — it is not a UI mod. Notifications (encounters, XP, session summaries) appear as system-injected context in the chat thread, visible to both you and Claude. They do not appear in Thrumble's speech bubble or any other CC UI widget.
+
+### Thrumble and Buddymon
+
+[Thrumble](https://www.anthropic.com/news/claude-code) is Anthropic's own companion widget built into Claude Code. Buddymon is a separate community plugin — there is no official relationship between them. The CC plugin API does not expose a hook to drive Thrumble's speech bubble, so Buddymon cannot make Thrumble announce encounters. If Anthropic ships a companion speech API in a future release, Buddymon will adopt it.
+
+Until then, Buddymon notifications arrive as chat context rather than Thrumble barks. All game state (XP, encounters, roster) works regardless.
 
 ---
 
