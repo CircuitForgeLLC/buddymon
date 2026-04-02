@@ -10,7 +10,7 @@ set -euo pipefail
 
 PLUGIN_NAME="buddymon"
 MARKETPLACE="local"
-VERSION="0.1.0"
+VERSION="0.1.1"
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 PLUGINS_DIR="${HOME}/.claude/plugins"
