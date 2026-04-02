@@ -87,12 +87,13 @@ print('\n'.join(lines))
 PYEOF
 )
 
-# Reset session XP counter for next session (keep total in roster)
+# Reset session XP + clear challenge so next session assigns a fresh one
 python3 << PYEOF
 import json
 active_file = '${BUDDYMON_DIR}/active.json'
 active = json.load(open(active_file))
 active['session_xp'] = 0
+active['challenge'] = None
 json.dump(active, open(active_file, 'w'), indent=2)
 PYEOF
 

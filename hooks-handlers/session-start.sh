@@ -101,6 +101,20 @@ if ch:
     echo "${ctx}"
 }
 
+# Assign a fresh challenge if none is set
+python3 << PYEOF
+import json, random
+catalog = json.load(open('${CATALOG}'))
+active_file = '${ACTIVE_FILE}'
+active = json.load(open(active_file))
+buddy_id = active.get('buddymon_id')
+if buddy_id and not active.get('challenge'):
+    pool = catalog.get('buddymon', {}).get(buddy_id, {}).get('challenges', [])
+    if pool:
+        active['challenge'] = random.choice(pool)
+        json.dump(active, open(active_file, 'w'), indent=2)
+PYEOF
+
 CONTEXT=$(build_context)
 
 # Escape for JSON
