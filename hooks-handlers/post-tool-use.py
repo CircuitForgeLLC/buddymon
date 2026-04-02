@@ -281,7 +281,6 @@ def main():
     if tool_name == "Bash":
         output = ""
         if isinstance(tool_response, dict):
-            # CC may use any of these keys; combine all text fields
             parts = [
                 tool_response.get("output", ""),
                 tool_response.get("content", ""),
@@ -292,7 +291,6 @@ def main():
         elif isinstance(tool_response, str):
             output = tool_response
         elif isinstance(tool_response, list):
-            # Array of content blocks: [{"type": "text", "text": "..."}]
             output = "\n".join(
                 b.get("text", "") for b in tool_response
                 if isinstance(b, dict) and b.get("type") == "text"
@@ -325,10 +323,9 @@ def main():
                         "defeatable": monster.get("defeatable", True),
                         "xp_reward": monster.get("xp_reward", 50),
                         "weakened_by": [],
+                        "announced": False,
                     }
                     set_active_encounter(encounter)
-                    msg = format_encounter_message(monster, strength, buddy_display)
-                    messages.append(msg)
 
         # Commit detection
         command = tool_input.get("command", "")
