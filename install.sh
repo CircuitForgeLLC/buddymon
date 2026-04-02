@@ -96,6 +96,13 @@ if '${MARKETPLACE}' in d:
 PYEOF
     fi
 
+    # Remove marketplace plugin symlink (leave marketplace dir in case other CF plugins exist)
+    MARKETPLACE_PLUGIN_LINK="${PLUGINS_DIR}/marketplaces/${MARKETPLACE}/plugins/${PLUGIN_NAME}"
+    if [[ -L "${MARKETPLACE_PLUGIN_LINK}" ]]; then
+        rm "${MARKETPLACE_PLUGIN_LINK}"
+        ok "Removed marketplace plugin symlink"
+    fi
+
     echo ""
     echo "✓  ${PLUGIN_KEY} uninstalled. Restart Claude Code to apply."
 }
@@ -263,6 +270,12 @@ for name, default in files.items():
         print(f"   Created {name}")
     else:
         print(f"   {name} already exists — kept")
+
+# Pre-create hook_debug.log so the hook sandbox can write to it
+log_path = os.path.join(d, 'hook_debug.log')
+if not os.path.exists(log_path):
+    open(log_path, 'w').close()
+    print("   Created hook_debug.log")
 PYEOF
 
     echo ""

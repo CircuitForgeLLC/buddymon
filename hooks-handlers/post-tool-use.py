@@ -18,6 +18,7 @@ import re
 import sys
 import random
 from pathlib import Path
+from datetime import datetime
 
 PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", str(Path(__file__).parent.parent))
 BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
@@ -280,9 +281,22 @@ def main():
     if tool_name == "Bash":
         output = ""
         if isinstance(tool_response, dict):
-            output = tool_response.get("output", "") or tool_response.get("content", "")
+            # CC may use any of these keys; combine all text fields
+            parts = [
+                tool_response.get("output", ""),
+                tool_response.get("content", ""),
+                tool_response.get("stderr", ""),
+                tool_response.get("text", ""),
+            ]
+            output = "\n".join(p for p in parts if isinstance(p, str) and p)
         elif isinstance(tool_response, str):
             output = tool_response
+        elif isinstance(tool_response, list):
+            # Array of content blocks: [{"type": "text", "text": "..."}]
+            output = "\n".join(
+                b.get("text", "") for b in tool_response
+                if isinstance(b, dict) and b.get("type") == "text"
+            )
 
         existing = get_active_encounter()
 

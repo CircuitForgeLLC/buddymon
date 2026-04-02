@@ -1,8 +1,10 @@
 # 🐾 Buddymon
 
-A Claude Code plugin that turns your coding sessions into a creature-collecting game.
+A Claude Code **extension** that turns your coding sessions into a creature-collecting game.
 
 Buddymon are discovered, caught, and leveled up through real development work — not separate from it.
+
+> **How it works:** Buddymon uses Claude Code's hook and plugin system — it is not a UI mod. Notifications (encounters, XP, session summaries) appear as system-injected context in the chat thread. They are visible to Claude and displayed in the conversation, but do not appear in a separate UI widget. This is a deliberate constraint of CC's extension API.
 
 ---
 
@@ -40,8 +42,9 @@ Then **restart Claude Code** and run:
 ```
 
 The install script:
-- Symlinks the repo into `~/.claude/plugins/cache/local/buddymon/0.1.0/`
-- Registers the plugin in `~/.claude/plugins/installed_plugins.json`
+- Creates a local `circuitforge` marketplace under `~/.claude/plugins/marketplaces/circuitforge/` (required — CC validates plugin names against the marketplace index)
+- Symlinks the repo into `~/.claude/plugins/cache/circuitforge/buddymon/<version>/`
+- Registers the plugin in `~/.claude/plugins/installed_plugins.json` and `~/.claude/plugins/known_marketplaces.json`
 - Enables it in `~/.claude/settings.json`
 - Creates `~/.claude/buddymon/` state directory with initial JSON files
 
