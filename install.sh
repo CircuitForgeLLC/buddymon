@@ -9,7 +9,7 @@
 set -euo pipefail
 
 PLUGIN_NAME="buddymon"
-MARKETPLACE="local"
+MARKETPLACE="circuitforge"
 VERSION="0.1.1"
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -82,11 +82,18 @@ if key in d.get('enabledPlugins', {}):
 PYEOF
     fi
 
-    # Remove marketplace plugin symlink
-    MARKETPLACE_PLUGIN_DIR="${PLUGINS_DIR}/marketplaces/${MARKETPLACE}/plugins/${PLUGIN_NAME}"
-    if [[ -L "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}" ]]; then
-        rm "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}"
-        ok "Removed marketplace symlink"
+    # Remove from known_marketplaces.json
+    KNOWN_MARKETPLACES="${PLUGINS_DIR}/known_marketplaces.json"
+    if [[ -f "${KNOWN_MARKETPLACES}" ]]; then
+        python3 << PYEOF
+import json
+f = '${KNOWN_MARKETPLACES}'
+d = json.load(open(f))
+if '${MARKETPLACE}' in d:
+    del d['${MARKETPLACE}']
+    json.dump(d, open(f, 'w'), indent=2)
+    print("   Removed '${MARKETPLACE}' from known_marketplaces.json")
+PYEOF
     fi
 
     echo ""
@@ -107,38 +114,60 @@ install() {
     [[ -f "${REPO_DIR}/hooks/hooks.json" ]] \
         || die "Missing hooks/hooks.json"
 
-    # Register 'local' marketplace so CC doesn't GC the cache entry on reload
-    KNOWN_MARKETPLACES="${PLUGINS_DIR}/known_marketplaces.json"
+    # Create circuitforge marketplace (CC validates plugin name against marketplace index)
     MARKETPLACE_DIR="${PLUGINS_DIR}/marketplaces/${MARKETPLACE}"
+    mkdir -p "${MARKETPLACE_DIR}/.claude-plugin"
+    mkdir -p "${MARKETPLACE_DIR}/plugins"
+
+    if [[ ! -f "${MARKETPLACE_DIR}/.claude-plugin/marketplace.json" ]]; then
+        python3 << PYEOF
+import json
+f = '${MARKETPLACE_DIR}/.claude-plugin/marketplace.json'
+d = {
+    "\$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name": "${MARKETPLACE}",
+    "description": "CircuitForge LLC Claude Code plugins",
+    "owner": {"name": "CircuitForge LLC", "email": "hello@circuitforge.tech"},
+    "plugins": [{
+        "name": "${PLUGIN_NAME}",
+        "description": "Collectible creatures discovered through coding — commit streaks, bug fights, and session challenges",
+        "author": {"name": "CircuitForge LLC", "email": "hello@circuitforge.tech"},
+        "source": "./plugins/${PLUGIN_NAME}",
+        "category": "productivity",
+        "homepage": "https://git.opensourcesolarpunk.com/Circuit-Forge/buddymon"
+    }]
+}
+json.dump(d, open(f, 'w'), indent=2)
+PYEOF
+        ok "Created ${MARKETPLACE} marketplace"
+    fi
+
+    # Symlink repo into marketplace plugins dir
+    if [[ ! -L "${MARKETPLACE_DIR}/plugins/${PLUGIN_NAME}" ]]; then
+        ln -sf "${REPO_DIR}" "${MARKETPLACE_DIR}/plugins/${PLUGIN_NAME}"
+        ok "Linked into marketplace plugins dir"
+    fi
+
+    # Register marketplace in known_marketplaces.json
     python3 << PYEOF
 import json, os
 from datetime import datetime, timezone
-
-f = '${KNOWN_MARKETPLACES}'
+f = '${PLUGINS_DIR}/known_marketplaces.json'
 try:
     d = json.load(open(f))
 except FileNotFoundError:
     d = {}
-
-if 'local' not in d:
-    d['local'] = {
+if '${MARKETPLACE}' not in d:
+    d['${MARKETPLACE}'] = {
         "source": {"source": "local", "path": '${MARKETPLACE_DIR}'},
         "installLocation": '${MARKETPLACE_DIR}',
         "lastUpdated": datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
     }
     json.dump(d, open(f, 'w'), indent=2)
-    print("   Registered 'local' marketplace")
+    print("   Registered '${MARKETPLACE}' in known_marketplaces.json")
 else:
-    print("   'local' marketplace already registered")
+    print("   '${MARKETPLACE}' marketplace already registered")
 PYEOF
-
-    # Symlink repo into marketplace plugins dir (so CC can discover it)
-    MARKETPLACE_PLUGIN_DIR="${MARKETPLACE_DIR}/plugins/${PLUGIN_NAME}"
-    mkdir -p "${MARKETPLACE_PLUGIN_DIR}"
-    if [[ ! -L "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}" ]]; then
-        ln -sf "${REPO_DIR}" "${MARKETPLACE_PLUGIN_DIR}/${PLUGIN_NAME}"
-        ok "Linked into marketplace dir"
-    fi
 
     # Create cache parent dir
     mkdir -p "$(dirname "${CACHE_DIR}")"

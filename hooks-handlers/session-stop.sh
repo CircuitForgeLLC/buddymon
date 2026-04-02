@@ -10,10 +10,6 @@ ACTIVE_ID=$(buddymon_get_active)
 SESSION_XP=$(buddymon_get_session_xp)
 
 if [[ -z "${ACTIVE_ID}" ]] || [[ "${SESSION_XP}" -eq 0 ]]; then
-    # Nothing to report
-    cat << 'EOF'
-{"hookSpecificOutput": {"hookEventName": "Stop", "additionalContext": ""}}
-EOF
     exit 0
 fi
 
@@ -107,12 +103,7 @@ SUMMARY_JSON=$(python3 -c "import json,sys; print(json.dumps(sys.argv[1]))" "${S
 [[ -z "${SUMMARY_JSON}" ]] && SUMMARY_JSON='""'
 
 cat << EOF
-{
-  "hookSpecificOutput": {
-    "hookEventName": "Stop",
-    "additionalContext": ${SUMMARY_JSON}
-  }
-}
+{"systemMessage": ${SUMMARY_JSON}}
 EOF
 
 exit 0
