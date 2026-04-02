@@ -280,12 +280,11 @@ def main():
     # ── Bash tool: error detection + auto-resolution + commit tracking ───────
     if tool_name == "Bash":
         output = ""
+        # CC Bash tool_response keys: stdout, stderr, interrupted, isImage, noOutputExpected
         if isinstance(tool_response, dict):
             parts = [
-                tool_response.get("output", ""),
-                tool_response.get("content", ""),
+                tool_response.get("stdout", ""),
                 tool_response.get("stderr", ""),
-                tool_response.get("text", ""),
             ]
             output = "\n".join(p for p in parts if isinstance(p, str) and p)
         elif isinstance(tool_response, str):
