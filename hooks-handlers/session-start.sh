@@ -93,10 +93,10 @@ if ch:
         enc_display=$(echo "${enc}" | python3 -c "import json,sys; print(json.load(sys.stdin).get('display','?'))")
         enc_strength=$(echo "${enc}" | python3 -c "import json,sys; print(json.load(sys.stdin).get('current_strength',100))")
         ctx+="⚠️  **Unresolved encounter from last session:** ${enc_display} (strength: ${enc_strength}%)\n"
-        ctx+="Run \`/buddymon-fight\` or \`/buddymon-catch\` to resolve it.\n\n"
+        ctx+="Run \`/buddymon fight\` or \`/buddymon catch\` to resolve it.\n\n"
     fi
 
-    ctx+="*Bug monsters appear from error output. Use \`/buddymon-fight\` or \`/buddymon-catch\`.*"
+    ctx+="*Bug monsters appear from error output. Use \`/buddymon fight\` or \`/buddymon catch\`.*"
 
     echo "${ctx}"
 }
