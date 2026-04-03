@@ -77,6 +77,54 @@ def add_session_xp(amount: int):
             save_json(roster_file, roster)
 
 
+LANGUAGE_TIERS = [
+    (0,    "discovering"),
+    (50,   "familiar"),
+    (150,  "comfortable"),
+    (350,  "proficient"),
+    (700,  "expert"),
+    (1200, "master"),
+]
+
+
+def _tier_for_xp(xp: int) -> tuple[int, str]:
+    """Return (level_index, tier_label) for a given XP total."""
+    level = 0
+    label = LANGUAGE_TIERS[0][1]
+    for i, (threshold, name) in enumerate(LANGUAGE_TIERS):
+        if xp >= threshold:
+            level = i
+            label = name
+    return level, label
+
+
+def get_language_affinity(lang: str) -> dict:
+    """Return the affinity entry for lang from roster.json, or a fresh one."""
+    roster = load_json(BUDDYMON_DIR / "roster.json")
+    return roster.get("language_affinities", {}).get(lang, {"xp": 0, "level": 0, "tier": "discovering"})
+
+
+def add_language_affinity(lang: str, xp_amount: int) -> tuple[bool, str, str]:
+    """Add XP to lang's affinity. Returns (leveled_up, old_tier, new_tier)."""
+    roster_file = BUDDYMON_DIR / "roster.json"
+    roster = load_json(roster_file)
+    affinities = roster.setdefault("language_affinities", {})
+    entry = affinities.get(lang, {"xp": 0, "level": 0, "tier": "discovering"})
+
+    old_level, old_tier = _tier_for_xp(entry["xp"])
+    entry["xp"] = entry.get("xp", 0) + xp_amount
+    new_level, new_tier = _tier_for_xp(entry["xp"])
+    entry["level"] = new_level
+    entry["tier"] = new_tier
+
+    affinities[lang] = entry
+    roster["language_affinities"] = affinities
+    save_json(roster_file, roster)
+
+    leveled_up = new_level > old_level
+    return leveled_up, old_tier, new_tier
+
+
 def get_languages_seen():
     session = load_json(BUDDYMON_DIR / "session.json")
     return set(session.get("languages_seen", []))
@@ -285,6 +333,23 @@ def format_new_language_message(lang: str, buddy_display: str) -> str:
     )
 
 
+def format_language_levelup_message(lang: str, old_tier: str, new_tier: str, total_xp: int, buddy_display: str) -> str:
+    tier_emojis = {
+        "discovering": "🔭",
+        "familiar": "📖",
+        "comfortable": "🛠️",
+        "proficient": "⚡",
+        "expert": "🎯",
+        "master": "👑",
+    }
+    emoji = tier_emojis.get(new_tier, "⬆️")
+    return (
+        f"\n{emoji} **{lang} affinity: {old_tier} → {new_tier}!**\n"
+        f"   {buddy_display} has grown more comfortable in {lang}.\n"
+        f"   *Total {lang} XP: {total_xp}*\n"
+    )
+
+
 def format_commit_message(streak: int, buddy_display: str) -> str:
     if streak < 5:
         return ""
@@ -394,18 +459,26 @@ def main():
             commit_xp = 20
             add_session_xp(commit_xp)
 
-    # ── Write / Edit: new language detection + test file encounters ───────
+    # ── Write / Edit: new language detection + affinity + test file encounters ─
     elif tool_name in ("Write", "Edit", "MultiEdit"):
         file_path = tool_input.get("file_path", "")
         if file_path:
             ext = os.path.splitext(file_path)[1].lower()
             lang = KNOWN_EXTENSIONS.get(ext)
             if lang:
+                # Session-level "first encounter" bonus
                 seen = get_languages_seen()
                 if lang not in seen:
                     add_language_seen(lang)
                     add_session_xp(15)
                     msg = format_new_language_message(lang, buddy_display)
+                    messages.append(msg)
+
+                # Persistent affinity XP — always accumulates
+                leveled_up, old_tier, new_tier = add_language_affinity(lang, 3)
+                if leveled_up:
+                    affinity = get_language_affinity(lang)
+                    msg = format_language_levelup_message(lang, old_tier, new_tier, affinity["xp"], buddy_display)
                     messages.append(msg)
 
             # TestSpecter: editing a test file with no active encounter

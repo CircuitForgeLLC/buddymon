@@ -259,7 +259,23 @@ Read roster and display:
   🌐 CORSCurse    — caught 2026-03-28
 
 ❓ ??? — [n] more creatures to discover...
+
+🗺️ Language Affinities
+──────────────────────────────────────────
+  🛠️  Python      comfortable  (Lv.2  · 183 XP)
+  📖  TypeScript  familiar     (Lv.1  · 72 XP)
+  🔭  Rust        discovering  (Lv.0  · 9 XP)
 ```
+
+Tier emoji mapping:
+- 🔭 discovering (0 XP)
+- 📖 familiar (50 XP)
+- 🛠️  comfortable (150 XP)
+- ⚡ proficient (350 XP)
+- 🎯 expert (700 XP)
+- 👑 master (1200 XP)
+
+Read `roster.json` → `language_affinities`. Skip this section if empty.
 
 ---
 
