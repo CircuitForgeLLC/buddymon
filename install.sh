@@ -278,6 +278,24 @@ if not os.path.exists(log_path):
     print("   Created hook_debug.log")
 PYEOF
 
+    # Copy statusline script to stable user-local path
+    cp "${REPO_DIR}/lib/statusline.sh" "${BUDDYMON_DIR}/statusline.sh"
+    chmod +x "${BUDDYMON_DIR}/statusline.sh"
+    ok "Installed statusline.sh → ${BUDDYMON_DIR}/statusline.sh"
+
+    # Install statusline into settings.json if not already configured
+    python3 << PYEOF
+import json
+f = '${SETTINGS_FILE}'
+d = json.load(open(f))
+if 'statusLine' not in d:
+    d['statusLine'] = {"type": "command", "command": "bash ${BUDDYMON_DIR}/statusline.sh"}
+    json.dump(d, open(f, 'w'), indent=2)
+    print("   Installed Buddymon statusline in settings.json")
+else:
+    print("   statusLine already configured — skipped (run /buddymon statusline to install manually)")
+PYEOF
+
     echo ""
     echo "✓  ${PLUGIN_KEY} installed!"
     echo ""
