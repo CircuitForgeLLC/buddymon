@@ -432,20 +432,24 @@ def main():
         if existing:
             # On a clean Bash run (monster patterns gone), respect catch_pending,
             # wound a healthy monster, or auto-resolve a wounded one.
+            # Probability gates prevent back-to-back Bash runs from instantly
+            # resolving encounters before the user can react.
             if output and not encounter_still_present(existing, output, catalog):
                 if existing.get("catch_pending"):
                     # User invoked /buddymon catch — hold the monster for them
                     pass
                 elif existing.get("wounded"):
-                    # Already wounded on last clean run — auto-resolve (it fled)
-                    xp, display = auto_resolve_encounter(existing, buddy_id)
-                    messages.append(
-                        f"\n💨 **{display} fled!** (escaped while wounded)\n"
-                        f"   {buddy_display} gets partial XP: +{xp}\n"
-                    )
+                    # Wounded: 35% chance to flee per clean run (avg ~3 runs to escape)
+                    if random.random() < 0.35:
+                        xp, display = auto_resolve_encounter(existing, buddy_id)
+                        messages.append(
+                            f"\n💨 **{display} fled!** (escaped while wounded)\n"
+                            f"   {buddy_display} gets partial XP: +{xp}\n"
+                        )
                 else:
-                    # First clean run — wound it and re-announce so user can catch
-                    wound_encounter()
+                    # Healthy: 50% chance to wound per clean run (avg ~2 runs to wound)
+                    if random.random() < 0.50:
+                        wound_encounter()
             # else: monster still present, no message — don't spam every tool call
         elif output or command:
             # No active encounter — check for bug monster first, then event encounters
