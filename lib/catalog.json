@@ -276,7 +276,15 @@
         "heap.*exhausted",
         "memory leak",
         "Cannot allocate memory",
-        "Killed.*memory"
+        "Killed.*memory",
+        "malloc.*failed",
+        "std::bad_alloc",
+        "java\\.lang\\.OutOfMemoryError",
+        "GC overhead limit exceeded",
+        "JavaScript heap out of memory",
+        "OOMKilled",
+        "oom-killer",
+        "malloc: can't allocate region"
       ],
       "weaken_actions": [
         {"action": "write_failing_test", "strength_reduction": 20},
@@ -284,6 +292,34 @@
         {"action": "add_documenting_comment", "strength_reduction": 10}
       ],
       "flavor": "It was already there when you opened the task manager."
+    },
+    "CudaCrash": {
+      "id": "CudaCrash",
+      "display": "⚡ CudaCrash",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 65,
+      "xp_reward": 130,
+      "catchable": true,
+      "defeatable": true,
+      "description": "Lives in VRAM. Detonates the moment your batch size is one too many. Doesn't negotiate.",
+      "error_patterns": [
+        "CUDA out of memory",
+        "torch\\.cuda\\.OutOfMemoryError",
+        "CUDA error: out of memory",
+        "RuntimeError.*CUDA.*memory",
+        "cuDNN.*insufficient memory",
+        "CUBLAS_STATUS_ALLOC_FAILED",
+        "out of GPU memory",
+        "VRAM.*exhausted",
+        "device-side assert triggered"
+      ],
+      "weaken_actions": [
+        {"action": "isolate_reproduction", "strength_reduction": 30},
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "Your model fit in VRAM yesterday. You added one layer."
     }
   },
 
