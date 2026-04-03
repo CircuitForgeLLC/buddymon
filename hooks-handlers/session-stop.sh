@@ -72,10 +72,27 @@ if langs:
 
 if leveled_up:
     lines.append(f"\n✨ **LEVEL UP!** {display} is now Lv.{new_level}!")
+    # Check if evolution is now available
+    catalog_entry = (catalog.get('buddymon', {}).get(buddy_id)
+                     or catalog.get('evolutions', {}).get(buddy_id) or {})
+    evolutions = catalog_entry.get('evolutions', [])
+    evo = next((e for e in evolutions if new_level >= e.get('level', 999)), None)
+    if evo:
+        into = catalog.get('evolutions', {}).get(evo['into'], {})
+        lines.append(f"\n⭐ **EVOLUTION READY!** {display} can evolve into {into.get('display', evo['into'])}!")
+        lines.append(f"   Run `/buddymon evolve` to prestige — resets to Lv.1 with upgraded stats.")
 else:
     filled = min(20, total_xp * 20 // xp_needed)
     bar = '█' * filled + '░' * (20 - filled)
     lines.append(f"XP: [{bar}] {total_xp}/{xp_needed}")
+    # Remind if already at evolution threshold but hasn't evolved yet
+    catalog_entry = (catalog.get('buddymon', {}).get(buddy_id)
+                     or catalog.get('evolutions', {}).get(buddy_id) or {})
+    evolutions = catalog_entry.get('evolutions', [])
+    evo = next((e for e in evolutions if level >= e.get('level', 999)), None)
+    if evo:
+        into = catalog.get('evolutions', {}).get(evo['into'], {})
+        lines.append(f"\n⭐ **Evolution available:** `/buddymon evolve` → {into.get('display', evo['into'])}")
 
 if challenge:
     if challenge_completed:

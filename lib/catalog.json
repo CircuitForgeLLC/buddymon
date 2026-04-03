@@ -1,11 +1,10 @@
 {
   "_version": 1,
   "_note": "Master species catalog. discovered=false entries are hidden until triggered.",
-
   "bug_monsters": {
     "NullWraith": {
       "id": "NullWraith",
-      "display": "👻 NullWraith",
+      "display": "\ud83d\udc7b NullWraith",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 20,
@@ -22,15 +21,24 @@
         "null reference"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 20},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "It was there this whole time. You just never checked."
     },
     "FencepostDemon": {
       "id": "FencepostDemon",
-      "display": "😈 FencepostDemon",
+      "display": "\ud83d\ude08 FencepostDemon",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 25,
@@ -46,15 +54,24 @@
         "off.by.one"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 20},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "Always one step ahead. Or behind. It's hard to tell."
     },
     "TypeGreml": {
       "id": "TypeGreml",
-      "display": "🔧 TypeGreml",
+      "display": "\ud83d\udd27 TypeGreml",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 25,
@@ -70,15 +87,24 @@
         "type.*is not assignable"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 20},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "It only attacks when you're absolutely sure about the type."
     },
     "SyntaxSerpent": {
       "id": "SyntaxSerpent",
-      "display": "🐍 SyntaxSerpent",
+      "display": "\ud83d\udc0d SyntaxSerpent",
       "type": "bug_monster",
       "rarity": "very_common",
       "base_strength": 10,
@@ -95,14 +121,20 @@
         "ParseError"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 30},
-        {"action": "add_documenting_comment", "strength_reduction": 20}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 30
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 20
+        }
       ],
       "flavor": "You'll be embarrassed you let this one survive long enough to catch."
     },
     "CORSCurse": {
       "id": "CORSCurse",
-      "display": "🌐 CORSCurse",
+      "display": "\ud83c\udf10 CORSCurse",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 40,
@@ -118,15 +150,24 @@
         "No 'Access-Control-Allow-Origin'"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 25},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "It's not your fault. Well. It kind of is."
     },
     "LoopLich": {
       "id": "LoopLich",
-      "display": "♾️  LoopLich",
+      "display": "\u267e\ufe0f  LoopLich",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 60,
@@ -146,15 +187,24 @@
         "StackOverflow"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 25},
-        {"action": "add_documenting_comment", "strength_reduction": 15}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 15
+        }
       ],
       "flavor": "The exit condition was always there. You just never believed in it."
     },
     "RacePhantom": {
       "id": "RacePhantom",
-      "display": "👁️  RacePhantom",
+      "display": "\ud83d\udc41\ufe0f  RacePhantom",
       "type": "bug_monster",
       "rarity": "rare",
       "base_strength": 80,
@@ -172,15 +222,24 @@
         "async.*conflict"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 15},
-        {"action": "isolate_reproduction", "strength_reduction": 30},
-        {"action": "add_documenting_comment", "strength_reduction": 15}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 15
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 30
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 15
+        }
       ],
       "flavor": "You've proven it exists. That's honestly impressive on its own."
     },
     "FossilGolem": {
       "id": "FossilGolem",
-      "display": "🗿 FossilGolem",
+      "display": "\ud83d\uddff FossilGolem",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 35,
@@ -197,23 +256,36 @@
         "legacy"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 20},
-        {"action": "add_documenting_comment", "strength_reduction": 20}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 20
+        }
       ],
       "flavor": "It survived every major version. It will outlast you."
     },
     "ShadowBit": {
       "id": "ShadowBit",
-      "display": "🔒 ShadowBit",
+      "display": "\ud83d\udd12 ShadowBit",
       "type": "bug_monster",
       "rarity": "rare",
       "base_strength": 90,
       "xp_reward": 300,
       "catchable": true,
       "defeatable": false,
-      "catch_requires": ["write_failing_test", "isolate_reproduction", "add_documenting_comment"],
-      "description": "Cannot be defeated — only properly contained. Requires full documentation + patching.",
+      "catch_requires": [
+        "write_failing_test",
+        "isolate_reproduction",
+        "add_documenting_comment"
+      ],
+      "description": "Cannot be defeated \u2014 only properly contained. Requires full documentation + patching.",
       "error_patterns": [
         "vulnerability",
         "CVE-",
@@ -229,15 +301,24 @@
         "hardcoded.*token"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 25},
-        {"action": "isolate_reproduction", "strength_reduction": 35},
-        {"action": "add_documenting_comment", "strength_reduction": 20}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 25
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 35
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 20
+        }
       ],
       "flavor": "Defeat is not an option. Containment is the only victory."
     },
     "VoidSpecter": {
       "id": "VoidSpecter",
-      "display": "🌫️  VoidSpecter",
+      "display": "\ud83c\udf2b\ufe0f  VoidSpecter",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 20,
@@ -254,15 +335,24 @@
         "endpoint.*not found"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 25},
-        {"action": "isolate_reproduction", "strength_reduction": 25},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 25
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "It used to exist. Probably."
     },
     "MemoryLeech": {
       "id": "MemoryLeech",
-      "display": "🩸 MemoryLeech",
+      "display": "\ud83e\ude78 MemoryLeech",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 55,
@@ -287,15 +377,24 @@
         "malloc: can't allocate region"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 30},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 30
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "It was already there when you opened the task manager."
     },
     "CudaCrash": {
       "id": "CudaCrash",
-      "display": "⚡ CudaCrash",
+      "display": "\u26a1 CudaCrash",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 65,
@@ -315,15 +414,24 @@
         "device-side assert triggered"
       ],
       "weaken_actions": [
-        {"action": "isolate_reproduction", "strength_reduction": 30},
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 30
+        },
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "Your model fit in VRAM yesterday. You added one layer."
     },
     "InfiniteWisp": {
       "id": "InfiniteWisp",
-      "display": "🌀 InfiniteWisp",
+      "display": "\ud83c\udf00 InfiniteWisp",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 30,
@@ -341,15 +449,24 @@
         "timed out after"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 20},
-        {"action": "isolate_reproduction", "strength_reduction": 30},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 20
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 30
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "Your fan was always loud. You just never checked why."
     },
     "BoundsHound": {
       "id": "BoundsHound",
-      "display": "🐕 BoundsHound",
+      "display": "\ud83d\udc15 BoundsHound",
       "type": "bug_monster",
       "rarity": "common",
       "base_strength": 25,
@@ -369,15 +486,24 @@
         "RangeError.*index"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 25},
-        {"action": "isolate_reproduction", "strength_reduction": 25},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 25
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "It was always length minus one. You just forgot."
     },
     "BranchGhost": {
       "id": "BranchGhost",
-      "display": "🔀 BranchGhost",
+      "display": "\ud83d\udd00 BranchGhost",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 40,
@@ -396,15 +522,24 @@
         "fallthrough"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 30},
-        {"action": "isolate_reproduction", "strength_reduction": 20},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 30
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "You were so sure that case was impossible."
     },
     "SwitchTrap": {
       "id": "SwitchTrap",
-      "display": "🪤 SwitchTrap",
+      "display": "\ud83e\udea4 SwitchTrap",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 35,
@@ -425,15 +560,24 @@
         "Unhandled variant"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 25},
-        {"action": "isolate_reproduction", "strength_reduction": 25},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 25
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "You added that new enum value last week. The switch didn't notice."
     },
     "RecurseWraith": {
       "id": "RecurseWraith",
-      "display": "🌪️ RecurseWraith",
+      "display": "\ud83c\udf2a\ufe0f RecurseWraith",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 45,
@@ -452,22 +596,31 @@
         "stack.*exhausted"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 25},
-        {"action": "isolate_reproduction", "strength_reduction": 25},
-        {"action": "add_documenting_comment", "strength_reduction": 10}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 25
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 10
+        }
       ],
       "flavor": "The base case was there. It just couldn't be reached."
     },
     "CatchAll": {
       "id": "CatchAll",
-      "display": "🕳️ CatchAll",
+      "display": "\ud83d\udd73\ufe0f CatchAll",
       "type": "bug_monster",
       "rarity": "rare",
       "base_strength": 60,
       "xp_reward": 120,
       "catchable": true,
       "defeatable": false,
-      "description": "Born from broad exception handlers. Swallows errors whole. Cannot be defeated — only caught, by narrowing the catch.",
+      "description": "Born from broad exception handlers. Swallows errors whole. Cannot be defeated \u2014 only caught, by narrowing the catch.",
       "error_patterns": [
         "except Exception",
         "except:$",
@@ -479,18 +632,26 @@
         "catch-all.*handler"
       ],
       "weaken_actions": [
-        {"action": "write_failing_test", "strength_reduction": 30},
-        {"action": "isolate_reproduction", "strength_reduction": 30},
-        {"action": "add_documenting_comment", "strength_reduction": 15}
+        {
+          "action": "write_failing_test",
+          "strength_reduction": 30
+        },
+        {
+          "action": "isolate_reproduction",
+          "strength_reduction": 30
+        },
+        {
+          "action": "add_documenting_comment",
+          "strength_reduction": 15
+        }
       ],
       "flavor": "If you catch everything, you learn nothing."
     }
   },
-
   "event_encounters": {
     "MergeMaw": {
       "id": "MergeMaw",
-      "display": "🔀 MergeMaw",
+      "display": "\ud83d\udd00 MergeMaw",
       "type": "event_encounter",
       "rarity": "uncommon",
       "base_strength": 45,
@@ -498,13 +659,16 @@
       "catchable": true,
       "defeatable": true,
       "trigger_type": "command",
-      "command_patterns": ["git merge", "git rebase"],
+      "command_patterns": [
+        "git merge",
+        "git rebase"
+      ],
       "description": "Emerges from the diff between two timelines. Loves conflicts.",
       "flavor": "It has opinions about your whitespace."
     },
     "BranchSprite": {
       "id": "BranchSprite",
-      "display": "🌿 BranchSprite",
+      "display": "\ud83c\udf3f BranchSprite",
       "type": "event_encounter",
       "rarity": "common",
       "base_strength": 15,
@@ -512,13 +676,17 @@
       "catchable": true,
       "defeatable": false,
       "trigger_type": "command",
-      "command_patterns": ["git checkout -b", "git switch -c", "git branch "],
+      "command_patterns": [
+        "git checkout -b",
+        "git switch -c",
+        "git branch "
+      ],
       "description": "Appears when a new branch is born. Harmless. Almost cheerful.",
       "flavor": "It wanted to come along for the feature."
     },
     "DepGolem": {
       "id": "DepGolem",
-      "display": "📦 DepGolem",
+      "display": "\ud83d\udce6 DepGolem",
       "type": "event_encounter",
       "rarity": "common",
       "base_strength": 30,
@@ -526,13 +694,25 @@
       "catchable": true,
       "defeatable": true,
       "trigger_type": "command",
-      "command_patterns": ["pip install", "pip3 install", "npm install", "npm i ", "cargo add", "yarn add", "apt install", "brew install", "poetry add", "uv add", "uv pip install"],
+      "command_patterns": [
+        "pip install",
+        "pip3 install",
+        "npm install",
+        "npm i ",
+        "cargo add",
+        "yarn add",
+        "apt install",
+        "brew install",
+        "poetry add",
+        "uv add",
+        "uv pip install"
+      ],
       "description": "Conjured from the package registry. Brings transitive dependencies.",
       "flavor": "It brought 847 friends."
     },
     "FlakeDemon": {
       "id": "FlakeDemon",
-      "display": "🎲 FlakeDemon",
+      "display": "\ud83c\udfb2 FlakeDemon",
       "type": "event_encounter",
       "rarity": "uncommon",
       "base_strength": 55,
@@ -555,7 +735,7 @@
     },
     "PhantomPass": {
       "id": "PhantomPass",
-      "display": "✅ PhantomPass",
+      "display": "\u2705 PhantomPass",
       "type": "event_encounter",
       "rarity": "rare",
       "base_strength": 10,
@@ -568,17 +748,17 @@
         "PASSED",
         "All tests passed",
         "tests passed",
-        "✓",
+        "\u2713",
         "\\d+ passed",
         "OK$",
         "SUCCESS"
       ],
-      "description": "Appears only when tests go green after going red. Rare. Fleeting. Cannot be fought — only caught.",
+      "description": "Appears only when tests go green after going red. Rare. Fleeting. Cannot be fought \u2014 only caught.",
       "flavor": "It was hiding in the red all along."
     },
     "TestSpecter": {
       "id": "TestSpecter",
-      "display": "🧪 TestSpecter",
+      "display": "\ud83e\uddea TestSpecter",
       "type": "event_encounter",
       "rarity": "uncommon",
       "base_strength": 25,
@@ -586,13 +766,19 @@
       "catchable": true,
       "defeatable": true,
       "trigger_type": "test_file",
-      "test_file_patterns": ["\\.test\\.", "_test\\.", "test_", "_spec\\.", "\\.spec\\."],
+      "test_file_patterns": [
+        "\\.test\\.",
+        "_test\\.",
+        "test_",
+        "_spec\\.",
+        "\\.spec\\."
+      ],
       "description": "Haunts test suites. Drawn to assertions. Debuglin gets excited.",
       "flavor": "It wanted to make sure the test was named correctly."
     },
     "ReviewHawk": {
       "id": "ReviewHawk",
-      "display": "🦅 ReviewHawk",
+      "display": "\ud83e\udd85 ReviewHawk",
       "type": "event_encounter",
       "rarity": "uncommon",
       "base_strength": 40,
@@ -613,7 +799,7 @@
     },
     "TicketGremlin": {
       "id": "TicketGremlin",
-      "display": "🎫 TicketGremlin",
+      "display": "\ud83c\udfab TicketGremlin",
       "type": "event_encounter",
       "rarity": "common",
       "base_strength": 30,
@@ -636,7 +822,7 @@
     },
     "PermWraith": {
       "id": "PermWraith",
-      "display": "🚫 PermWraith",
+      "display": "\ud83d\udeab PermWraith",
       "type": "event_encounter",
       "rarity": "common",
       "base_strength": 35,
@@ -660,7 +846,7 @@
     },
     "SudoSprite": {
       "id": "SudoSprite",
-      "display": "🔑 SudoSprite",
+      "display": "\ud83d\udd11 SudoSprite",
       "type": "event_encounter",
       "rarity": "uncommon",
       "base_strength": 20,
@@ -677,12 +863,12 @@
         "sudo chgrp",
         "setfacl "
       ],
-      "description": "Emerges when permissions are corrected. Doesn't fight — it just watches to make sure you chose the right octal.",
+      "description": "Emerges when permissions are corrected. Doesn't fight \u2014 it just watches to make sure you chose the right octal.",
       "flavor": "777 was always the answer. Never the right one."
     },
     "LayerLurker": {
       "id": "LayerLurker",
-      "display": "🐋 LayerLurker",
+      "display": "\ud83d\udc0b LayerLurker",
       "type": "event_encounter",
       "rarity": "common",
       "base_strength": 35,
@@ -704,7 +890,7 @@
     },
     "DiskDemon": {
       "id": "DiskDemon",
-      "display": "💾 DiskDemon",
+      "display": "\ud83d\udcbe DiskDemon",
       "type": "event_encounter",
       "rarity": "uncommon",
       "base_strength": 50,
@@ -726,132 +912,260 @@
       "flavor": "It's been there since 2019. It's just a log file, you said."
     }
   },
-
   "buddymon": {
     "Pyrobyte": {
       "id": "Pyrobyte",
-      "display": "🔥 Pyrobyte",
+      "display": "\ud83d\udd25 Pyrobyte",
       "type": "buddymon",
       "affinity": "Speedrunner",
       "rarity": "starter",
       "description": "Moves fast, thinks faster. Loves tight deadlines and feature sprints.",
-      "discover_trigger": {"type": "starter", "index": 0},
-      "base_stats": {"power": 40, "catch_rate": 0.45, "xp_multiplier": 1.2},
-      "affinity_bonus_triggers": ["fast_feature", "short_session_win"],
+      "discover_trigger": {
+        "type": "starter",
+        "index": 0
+      },
+      "base_stats": {
+        "power": 40,
+        "catch_rate": 0.45,
+        "xp_multiplier": 1.2
+      },
+      "affinity_bonus_triggers": [
+        "fast_feature",
+        "short_session_win"
+      ],
       "challenges": [
-        {"name": "SPEED RUN", "description": "Implement a feature in under 30 minutes", "xp": 280, "difficulty": 3},
-        {"name": "BLITZ", "description": "Resolve 3 bug monsters in one session", "xp": 350, "difficulty": 4}
+        {
+          "name": "SPEED RUN",
+          "description": "Implement a feature in under 30 minutes",
+          "xp": 280,
+          "difficulty": 3
+        },
+        {
+          "name": "BLITZ",
+          "description": "Resolve 3 bug monsters in one session",
+          "xp": 350,
+          "difficulty": 4
+        }
       ],
       "evolutions": [
-        {"level": 10, "into": "Infernus", "requires": "affinity_challenge_x3"}
+        {
+          "level": 100,
+          "into": "Infernus"
+        }
       ],
       "flavor": "It already committed before you finished reading the issue."
     },
     "Debuglin": {
       "id": "Debuglin",
-      "display": "🔍 Debuglin",
+      "display": "\ud83d\udd0d Debuglin",
       "type": "buddymon",
       "affinity": "Tester",
       "rarity": "starter",
       "description": "Patient, methodical, ruthless. Lives for the reproduction case.",
-      "discover_trigger": {"type": "starter", "index": 1},
-      "base_stats": {"power": 35, "catch_rate": 0.60, "xp_multiplier": 1.0},
-      "affinity_bonus_triggers": ["write_test", "fix_bug_with_test"],
+      "discover_trigger": {
+        "type": "starter",
+        "index": 1
+      },
+      "base_stats": {
+        "power": 35,
+        "catch_rate": 0.6,
+        "xp_multiplier": 1.0
+      },
+      "affinity_bonus_triggers": [
+        "write_test",
+        "fix_bug_with_test"
+      ],
       "challenges": [
-        {"name": "IRON TEST", "description": "Write 5 tests in one session", "xp": 300, "difficulty": 2},
-        {"name": "COVERAGE PUSH", "description": "Increase test coverage in a file", "xp": 250, "difficulty": 2}
+        {
+          "name": "IRON TEST",
+          "description": "Write 5 tests in one session",
+          "xp": 300,
+          "difficulty": 2
+        },
+        {
+          "name": "COVERAGE PUSH",
+          "description": "Increase test coverage in a file",
+          "xp": 250,
+          "difficulty": 2
+        }
       ],
       "evolutions": [
-        {"level": 10, "into": "Verifex", "requires": "affinity_challenge_x3"}
+        {
+          "level": 100,
+          "into": "Verifex"
+        }
       ],
       "flavor": "The bug isn't found until the test is written."
     },
     "Minimox": {
       "id": "Minimox",
-      "display": "✂️  Minimox",
+      "display": "\u2702\ufe0f  Minimox",
       "type": "buddymon",
       "affinity": "Cleaner",
       "rarity": "starter",
       "description": "Obsessed with fewer lines. Gets uncomfortable around anything over 300 LOC.",
-      "discover_trigger": {"type": "starter", "index": 2},
-      "base_stats": {"power": 30, "catch_rate": 0.50, "xp_multiplier": 1.1},
-      "affinity_bonus_triggers": ["net_negative_lines", "refactor_session"],
+      "discover_trigger": {
+        "type": "starter",
+        "index": 2
+      },
+      "base_stats": {
+        "power": 30,
+        "catch_rate": 0.5,
+        "xp_multiplier": 1.1
+      },
+      "affinity_bonus_triggers": [
+        "net_negative_lines",
+        "refactor_session"
+      ],
       "challenges": [
-        {"name": "CLEAN RUN", "description": "Complete session with zero linter errors", "xp": 340, "difficulty": 2},
-        {"name": "SHRINK", "description": "Net negative lines of code this session", "xp": 280, "difficulty": 3}
+        {
+          "name": "CLEAN RUN",
+          "description": "Complete session with zero linter errors",
+          "xp": 340,
+          "difficulty": 2
+        },
+        {
+          "name": "SHRINK",
+          "description": "Net negative lines of code this session",
+          "xp": 280,
+          "difficulty": 3
+        }
       ],
       "evolutions": [
-        {"level": 10, "into": "Nullex", "requires": "affinity_challenge_x3"}
+        {
+          "level": 100,
+          "into": "Nullex"
+        }
       ],
       "flavor": "It deleted your comment. It was redundant."
     },
     "Noctara": {
       "id": "Noctara",
-      "display": "🌙 Noctara",
+      "display": "\ud83c\udf19 Noctara",
       "type": "buddymon",
       "affinity": "Nocturnal",
       "rarity": "rare",
       "description": "Only appears after 10pm. Mysterious. Gives bonus XP for late-night focus runs.",
-      "discover_trigger": {"type": "late_night_session", "hours_after": 22, "min_hours": 2},
-      "base_stats": {"power": 55, "catch_rate": 0.35, "xp_multiplier": 1.5},
-      "affinity_bonus_triggers": ["late_night_session", "deep_focus"],
+      "discover_trigger": {
+        "type": "late_night_session",
+        "hours_after": 22,
+        "min_hours": 2
+      },
+      "base_stats": {
+        "power": 55,
+        "catch_rate": 0.35,
+        "xp_multiplier": 1.5
+      },
+      "affinity_bonus_triggers": [
+        "late_night_session",
+        "deep_focus"
+      ],
       "challenges": [
-        {"name": "MIDNIGHT RUN", "description": "3-hour session after 10pm", "xp": 500, "difficulty": 4},
-        {"name": "DAWN COMMIT", "description": "Commit between 2am and 5am", "xp": 400, "difficulty": 3}
+        {
+          "name": "MIDNIGHT RUN",
+          "description": "3-hour session after 10pm",
+          "xp": 500,
+          "difficulty": 4
+        },
+        {
+          "name": "DAWN COMMIT",
+          "description": "Commit between 2am and 5am",
+          "xp": 400,
+          "difficulty": 3
+        }
       ],
       "evolutions": [
-        {"level": 15, "into": "Umbravex", "requires": "nocturnal_sessions_x5"}
+        {
+          "level": 15,
+          "into": "Umbravex",
+          "requires": "nocturnal_sessions_x5"
+        }
       ],
       "flavor": "It remembers everything you wrote at 2am. Everything."
     },
     "Explorah": {
       "id": "Explorah",
-      "display": "🗺️  Explorah",
+      "display": "\ud83d\uddfa\ufe0f  Explorah",
       "type": "buddymon",
       "affinity": "Explorer",
       "rarity": "uncommon",
       "description": "Discovered when you touch a new language for the first time. Thrives on novelty.",
-      "discover_trigger": {"type": "new_language"},
-      "base_stats": {"power": 45, "catch_rate": 0.50, "xp_multiplier": 1.2},
-      "affinity_bonus_triggers": ["new_language", "new_library", "touch_new_module"],
+      "discover_trigger": {
+        "type": "new_language"
+      },
+      "base_stats": {
+        "power": 45,
+        "catch_rate": 0.5,
+        "xp_multiplier": 1.2
+      },
+      "affinity_bonus_triggers": [
+        "new_language",
+        "new_library",
+        "touch_new_module"
+      ],
       "challenges": [
-        {"name": "EXPEDITION", "description": "Touch 3 different modules in one session", "xp": 260, "difficulty": 2},
-        {"name": "POLYGLOT", "description": "Write in 2 different languages in one session", "xp": 380, "difficulty": 4}
+        {
+          "name": "EXPEDITION",
+          "description": "Touch 3 different modules in one session",
+          "xp": 260,
+          "difficulty": 2
+        },
+        {
+          "name": "POLYGLOT",
+          "description": "Write in 2 different languages in one session",
+          "xp": 380,
+          "difficulty": 4
+        }
       ],
       "evolutions": [
-        {"level": 12, "into": "Wandervex", "requires": "new_languages_x5"}
+        {
+          "level": 12,
+          "into": "Wandervex",
+          "requires": "new_languages_x5"
+        }
       ],
       "flavor": "It's already halfway through the new framework docs."
     }
   },
-
   "evolutions": {
     "Infernus": {
       "id": "Infernus",
-      "display": "🌋 Infernus",
+      "display": "\ud83c\udf0b Infernus",
       "type": "buddymon",
       "evolves_from": "Pyrobyte",
       "affinity": "Speedrunner",
       "description": "Evolved form of Pyrobyte. Moves at dangerous speeds.",
-      "base_stats": {"power": 70, "catch_rate": 0.55, "xp_multiplier": 1.5}
+      "base_stats": {
+        "power": 70,
+        "catch_rate": 0.55,
+        "xp_multiplier": 1.5
+      }
     },
     "Verifex": {
       "id": "Verifex",
-      "display": "🔬 Verifex",
+      "display": "\ud83d\udd2c Verifex",
       "type": "buddymon",
       "evolves_from": "Debuglin",
       "affinity": "Tester",
       "description": "Evolved form of Debuglin. Sees the bug before the code is even written.",
-      "base_stats": {"power": 60, "catch_rate": 0.75, "xp_multiplier": 1.3}
+      "base_stats": {
+        "power": 60,
+        "catch_rate": 0.75,
+        "xp_multiplier": 1.3
+      }
     },
     "Nullex": {
       "id": "Nullex",
-      "display": "🕳️  Nullex",
+      "display": "\ud83d\udd73\ufe0f  Nullex",
       "type": "buddymon",
       "evolves_from": "Minimox",
       "affinity": "Cleaner",
       "description": "Evolved form of Minimox. Has achieved true minimalism. The file was always one function.",
-      "base_stats": {"power": 55, "catch_rate": 0.65, "xp_multiplier": 1.4}
+      "base_stats": {
+        "power": 55,
+        "catch_rate": 0.65,
+        "xp_multiplier": 1.4
+      }
     }
   }
 }
