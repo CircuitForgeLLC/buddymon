@@ -479,6 +479,51 @@
       ],
       "description": "Emerges when permissions are corrected. Doesn't fight — it just watches to make sure you chose the right octal.",
       "flavor": "777 was always the answer. Never the right one."
+    },
+    "LayerLurker": {
+      "id": "LayerLurker",
+      "display": "🐋 LayerLurker",
+      "type": "event_encounter",
+      "rarity": "common",
+      "base_strength": 35,
+      "xp_reward": 60,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "command",
+      "command_patterns": [
+        "docker build",
+        "docker pull",
+        "docker run",
+        "docker compose up",
+        "docker-compose up",
+        "podman build",
+        "podman pull"
+      ],
+      "description": "Lives between image layers. Gets comfortable during long builds.",
+      "flavor": "It cached everything except the one layer you changed."
+    },
+    "DiskDemon": {
+      "id": "DiskDemon",
+      "display": "💾 DiskDemon",
+      "type": "event_encounter",
+      "rarity": "uncommon",
+      "base_strength": 50,
+      "xp_reward": 95,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "output",
+      "error_patterns": [
+        "No space left on device",
+        "ENOSPC",
+        "disk quota exceeded",
+        "Disk quota exceeded",
+        "not enough space",
+        "insufficient disk space",
+        "no space available",
+        "filesystem is full"
+      ],
+      "description": "Manifests when the disk is full. Usually right before a release.",
+      "flavor": "It's been there since 2019. It's just a log file, you said."
     }
   },
 
