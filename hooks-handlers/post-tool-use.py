@@ -225,6 +225,58 @@ def format_encounter_message(monster: dict, strength: int, buddy_display: str) -
     return "\n".join(lines)
 
 
+def match_event_encounter(command: str, output: str, session: dict, catalog: dict):
+    """Detect non-error-based encounters: git ops, installs, test results."""
+    events = catalog.get("event_encounters", {})
+    errors_seen = bool(session.get("errors_encountered") or session.get("tools_used", 0) > 5)
+
+    for enc_id, enc in events.items():
+        trigger = enc.get("trigger_type", "")
+
+        if trigger == "command":
+            if any(pat in command for pat in enc.get("command_patterns", [])):
+                return enc
+
+        elif trigger == "output":
+            if any(re.search(pat, output, re.IGNORECASE) for pat in enc.get("error_patterns", [])):
+                return enc
+
+        elif trigger == "test_victory":
+            # Only spawn PhantomPass when tests go green after the session has been running a while
+            if errors_seen and any(re.search(pat, output, re.IGNORECASE) for pat in enc.get("success_patterns", [])):
+                return enc
+
+    return None
+
+
+def match_test_file_encounter(file_path: str, catalog: dict):
+    """Spawn TestSpecter when editing a test file."""
+    enc = catalog.get("event_encounters", {}).get("TestSpecter")
+    if not enc:
+        return None
+    name = os.path.basename(file_path).lower()
+    if any(re.search(pat, name) for pat in enc.get("test_file_patterns", [])):
+        return enc
+    return None
+
+
+def spawn_encounter(enc: dict) -> None:
+    """Write an event encounter to active state with announced=False."""
+    strength = enc.get("base_strength", 30)
+    encounter = {
+        "id": enc["id"],
+        "display": enc["display"],
+        "base_strength": enc.get("base_strength", 30),
+        "current_strength": strength,
+        "catchable": enc.get("catchable", True),
+        "defeatable": enc.get("defeatable", True),
+        "xp_reward": enc.get("xp_reward", 50),
+        "weakened_by": [],
+        "announced": False,
+    }
+    set_active_encounter(encounter)
+
+
 def format_new_language_message(lang: str, buddy_display: str) -> str:
     return (
         f"\n🗺️  **New language spotted: {lang}!**\n"
@@ -279,6 +331,7 @@ def main():
 
     # ── Bash tool: error detection + auto-resolution + commit tracking ───────
     if tool_name == "Bash":
+        command = tool_input.get("command", "")
         output = ""
         # CC Bash tool_response keys: stdout, stderr, interrupted, isImage, noOutputExpected
         if isinstance(tool_response, dict):
@@ -306,28 +359,32 @@ def main():
                     f"   +{xp} XP\n"
                 )
             # else: monster persists, no message — don't spam every tool call
-        elif output:
-            # No active encounter — check for a new one
-            monster = match_bug_monster(output, catalog)
-            if monster:
-                # 70% chance to trigger (avoids every minor warning spawning)
-                if random.random() < 0.70:
+        elif output or command:
+            # No active encounter — check for bug monster first, then event encounters
+            session = load_json(BUDDYMON_DIR / "session.json")
+            monster = match_bug_monster(output, catalog) if output else None
+            event = None if monster else match_event_encounter(command, output, session, catalog)
+            target = monster or event
+
+            if target and random.random() < 0.70:
+                if monster:
                     strength = compute_strength(monster, elapsed_minutes=0)
-                    encounter = {
-                        "id": monster["id"],
-                        "display": monster["display"],
-                        "base_strength": monster.get("base_strength", 50),
-                        "current_strength": strength,
-                        "catchable": monster.get("catchable", True),
-                        "defeatable": monster.get("defeatable", True),
-                        "xp_reward": monster.get("xp_reward", 50),
-                        "weakened_by": [],
-                        "announced": False,
-                    }
-                    set_active_encounter(encounter)
+                else:
+                    strength = target.get("base_strength", 30)
+                encounter = {
+                    "id": target["id"],
+                    "display": target["display"],
+                    "base_strength": target.get("base_strength", 50),
+                    "current_strength": strength,
+                    "catchable": target.get("catchable", True),
+                    "defeatable": target.get("defeatable", True),
+                    "xp_reward": target.get("xp_reward", 50),
+                    "weakened_by": [],
+                    "announced": False,
+                }
+                set_active_encounter(encounter)
 
         # Commit detection
-        command = tool_input.get("command", "")
         if "git commit" in command and "exit_code" not in str(tool_response):
             session_file = BUDDYMON_DIR / "session.json"
             session = load_json(session_file)
@@ -337,7 +394,7 @@ def main():
             commit_xp = 20
             add_session_xp(commit_xp)
 
-    # ── Write / Edit: new language detection ──────────────────────────────
+    # ── Write / Edit: new language detection + test file encounters ───────
     elif tool_name in ("Write", "Edit", "MultiEdit"):
         file_path = tool_input.get("file_path", "")
         if file_path:
@@ -350,6 +407,12 @@ def main():
                     add_session_xp(15)
                     msg = format_new_language_message(lang, buddy_display)
                     messages.append(msg)
+
+            # TestSpecter: editing a test file with no active encounter
+            if not get_active_encounter():
+                enc = match_test_file_encounter(file_path, catalog)
+                if enc and random.random() < 0.50:
+                    spawn_encounter(enc)
 
         # Small XP for every file edit
         add_session_xp(2)
