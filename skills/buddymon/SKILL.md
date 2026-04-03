@@ -175,14 +175,31 @@ ShadowBit (🔒) cannot be defeated — redirect to catch.
 
 Read active encounter. If none: "No active encounter."
 
-Show strength and weakening status. Explain weaken actions:
+**Immediately set `catch_pending = True`** on the encounter to suppress auto-resolve
+while the weakening Q&A is in progress:
+
+```python
+import json, os
+BUDDYMON_DIR = os.path.expanduser("~/.claude/buddymon")
+enc_file = f"{BUDDYMON_DIR}/encounters.json"
+encounters = json.load(open(enc_file))
+enc = encounters.get("active_encounter")
+if enc:
+    enc["catch_pending"] = True
+    encounters["active_encounter"] = enc
+    json.dump(encounters, open(enc_file, "w"), indent=2)
+```
+
+Show strength and weakening status. If `enc.get("wounded")` is True, note that
+it's already at 5% and a catch is near-guaranteed. Explain weaken actions:
 - Write a failing test → -20% strength
 - Isolate reproduction case → -20% strength
 - Add documenting comment → -10% strength
 
 Ask which weakening actions have been done. Apply reductions to `current_strength`.
 
-Catch roll:
+Catch roll (clear `catch_pending` before rolling — success clears encounter, failure
+leaves it active without the flag so auto-resolve resumes naturally):
 ```python
 import json, os, random
 from datetime import datetime, timezone
@@ -201,6 +218,9 @@ roster = json.load(open(roster_file))
 
 enc = encounters.get("active_encounter")
 buddy_id = active.get("buddymon_id")
+
+# Clear catch_pending before rolling (win or lose)
+enc["catch_pending"] = False
 
 buddy_data = (catalog.get("buddymon", {}).get(buddy_id)
               or catalog.get("evolutions", {}).get(buddy_id) or {})
@@ -233,6 +253,9 @@ if success:
     json.dump(encounters, open(enc_file, "w"), indent=2)
     print(f"caught:{xp}")
 else:
+    # Save cleared catch_pending back on failure
+    encounters["active_encounter"] = enc
+    json.dump(encounters, open(enc_file, "w"), indent=2)
     print(f"failed:{int(catch_rate * 100)}")
 ```
 

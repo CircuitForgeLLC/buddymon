@@ -169,6 +169,20 @@ def set_active_encounter(encounter: dict):
     save_json(enc_file, data)
 
 
+def wound_encounter() -> None:
+    """Drop active encounter to minimum strength and flag for re-announcement."""
+    enc_file = BUDDYMON_DIR / "encounters.json"
+    data = load_json(enc_file)
+    enc = data.get("active_encounter")
+    if not enc:
+        return
+    enc["current_strength"] = 5
+    enc["wounded"] = True
+    enc["announced"] = False   # triggers UserPromptSubmit re-announcement
+    data["active_encounter"] = enc
+    save_json(enc_file, data)
+
+
 def match_bug_monster(output_text: str, catalog: dict) -> dict | None:
     """Return the first matching bug monster from the catalog, or None."""
     if not output_text:
@@ -416,14 +430,23 @@ def main():
         existing = get_active_encounter()
 
         if existing:
-            # Auto-resolve if the monster's patterns no longer appear in output
+            # On a clean Bash run (monster patterns gone), respect catch_pending,
+            # wound a healthy monster, or auto-resolve a wounded one.
             if output and not encounter_still_present(existing, output, catalog):
-                xp, display = auto_resolve_encounter(existing, buddy_id)
-                messages.append(
-                    f"\n⚔️  **{buddy_display} defeated {display}!** (auto-resolved)\n"
-                    f"   +{xp} XP\n"
-                )
-            # else: monster persists, no message — don't spam every tool call
+                if existing.get("catch_pending"):
+                    # User invoked /buddymon catch — hold the monster for them
+                    pass
+                elif existing.get("wounded"):
+                    # Already wounded on last clean run — auto-resolve (it fled)
+                    xp, display = auto_resolve_encounter(existing, buddy_id)
+                    messages.append(
+                        f"\n💨 **{display} fled!** (escaped while wounded)\n"
+                        f"   {buddy_display} gets partial XP: +{xp}\n"
+                    )
+                else:
+                    # First clean run — wound it and re-announce so user can catch
+                    wound_encounter()
+            # else: monster still present, no message — don't spam every tool call
         elif output or command:
             # No active encounter — check for bug monster first, then event encounters
             session = load_json(BUDDYMON_DIR / "session.json")
