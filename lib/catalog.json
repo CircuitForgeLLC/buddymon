@@ -320,6 +320,170 @@
         {"action": "add_documenting_comment", "strength_reduction": 10}
       ],
       "flavor": "Your model fit in VRAM yesterday. You added one layer."
+    },
+    "InfiniteWisp": {
+      "id": "InfiniteWisp",
+      "display": "🌀 InfiniteWisp",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 30,
+      "xp_reward": 55,
+      "catchable": true,
+      "defeatable": true,
+      "description": "Spawned from a while loop with no exit. Runs forever. Eats your CPU. Doesn't know it's lost.",
+      "error_patterns": [
+        "KeyboardInterrupt",
+        "Traceback.*KeyboardInterrupt",
+        "infinite loop",
+        "loop.*infinite",
+        "maximum iteration",
+        "process.*hung",
+        "timed out after"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 20},
+        {"action": "isolate_reproduction", "strength_reduction": 30},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "Your fan was always loud. You just never checked why."
+    },
+    "BoundsHound": {
+      "id": "BoundsHound",
+      "display": "🐕 BoundsHound",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 25,
+      "xp_reward": 45,
+      "catchable": true,
+      "defeatable": true,
+      "description": "Lurks at the edge of every array. Patient. Knows you'll be off by one eventually.",
+      "error_patterns": [
+        "IndexError",
+        "index out of range",
+        "list index out of range",
+        "ArrayIndexOutOfBoundsException",
+        "array index.*out of bounds",
+        "index.*out of bounds",
+        "subscript out of range",
+        "out of bounds access",
+        "RangeError.*index"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 25},
+        {"action": "isolate_reproduction", "strength_reduction": 25},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "It was always length minus one. You just forgot."
+    },
+    "BranchGhost": {
+      "id": "BranchGhost",
+      "display": "🔀 BranchGhost",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 40,
+      "xp_reward": 75,
+      "catchable": true,
+      "defeatable": true,
+      "description": "Lives in the else branch you swore would never execute. It executed.",
+      "error_patterns": [
+        "unreachable code",
+        "dead code",
+        "branch.*never.*taken",
+        "always.*true",
+        "always.*false",
+        "condition.*always",
+        "else.*never",
+        "fallthrough"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 30},
+        {"action": "isolate_reproduction", "strength_reduction": 20},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "You were so sure that case was impossible."
+    },
+    "SwitchTrap": {
+      "id": "SwitchTrap",
+      "display": "🪤 SwitchTrap",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 35,
+      "xp_reward": 65,
+      "catchable": true,
+      "defeatable": true,
+      "description": "Hides in unhandled cases. Switch statements with no default. Match arms that never close. It found the gap.",
+      "error_patterns": [
+        "fall.?through",
+        "missing.*case",
+        "unhandled.*case",
+        "no.*default",
+        "non-exhaustive.*pattern",
+        "MatchError",
+        "match.*non-exhaustive",
+        "switch.*not.*handled",
+        "Missing case for",
+        "Unhandled variant"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 25},
+        {"action": "isolate_reproduction", "strength_reduction": 25},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "You added that new enum value last week. The switch didn't notice."
+    },
+    "RecurseWraith": {
+      "id": "RecurseWraith",
+      "display": "🌪️ RecurseWraith",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 45,
+      "xp_reward": 85,
+      "catchable": true,
+      "defeatable": true,
+      "description": "The function that forgot to stop. Calls itself into oblivion. The base case was almost right.",
+      "error_patterns": [
+        "RecursionError",
+        "maximum recursion depth",
+        "stack overflow",
+        "StackOverflowError",
+        "too much recursion",
+        "Maximum call stack size exceeded",
+        "infinite recursion",
+        "stack.*exhausted"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 25},
+        {"action": "isolate_reproduction", "strength_reduction": 25},
+        {"action": "add_documenting_comment", "strength_reduction": 10}
+      ],
+      "flavor": "The base case was there. It just couldn't be reached."
+    },
+    "CatchAll": {
+      "id": "CatchAll",
+      "display": "🕳️ CatchAll",
+      "type": "bug_monster",
+      "rarity": "rare",
+      "base_strength": 60,
+      "xp_reward": 120,
+      "catchable": true,
+      "defeatable": false,
+      "description": "Born from broad exception handlers. Swallows errors whole. Cannot be defeated — only caught, by narrowing the catch.",
+      "error_patterns": [
+        "except Exception",
+        "except:$",
+        "catch.*\\(Exception e\\)",
+        "catch.*\\(e\\).*\\{\\}",
+        "swallowed.*exception",
+        "error.*ignored",
+        "bare except",
+        "catch-all.*handler"
+      ],
+      "weaken_actions": [
+        {"action": "write_failing_test", "strength_reduction": 30},
+        {"action": "isolate_reproduction", "strength_reduction": 30},
+        {"action": "add_documenting_comment", "strength_reduction": 15}
+      ],
+      "flavor": "If you catch everything, you learn nothing."
     }
   },
 
