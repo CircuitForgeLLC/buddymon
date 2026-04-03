@@ -25,6 +25,7 @@ Parse `$ARGUMENTS` (trim whitespace, lowercase the first word) and dispatch:
 | `fight` | Fight active encounter |
 | `catch` | Catch active encounter |
 | `roster` | Full roster view |
+| `statusline` | Install Buddymon statusline into settings.json |
 | `help` | Show command list |
 
 ---
@@ -279,6 +280,46 @@ Read `roster.json` → `language_affinities`. Skip this section if empty.
 
 ---
 
+## `statusline` — Install Buddymon Statusline
+
+Installs the Buddymon statusline into `~/.claude/settings.json`.
+
+The statusline shows active buddy + level + session XP, and highlights any
+active encounter in red:
+
+```
+🐾 Debuglin Lv.90 · +45xp  ⚔  💀 NullWraith [60%]
+```
+
+Run this Python to install:
+
+```python
+import json, os, shutil
+
+SETTINGS = os.path.expanduser("~/.claude/settings.json")
+PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+SCRIPT = os.path.join(PLUGIN_ROOT, "lib", "statusline.sh")
+
+settings = json.load(open(SETTINGS))
+
+if settings.get("statusLine"):
+    print("⚠️  A statusLine is already configured. Replace it? (y/n)")
+    # ask user — if no, abort
+    # if yes, proceed
+    pass
+
+settings["statusLine"] = {
+    "type": "command",
+    "command": f"bash {SCRIPT}",
+}
+json.dump(settings, open(SETTINGS, "w"), indent=2)
+print(f"✅ Buddymon statusline installed. Reload Claude Code to activate.")
+```
+
+If a `statusLine` is already set, show the existing command and ask before replacing.
+
+---
+
 ## `help`
 
 ```
@@ -288,4 +329,5 @@ Read `roster.json` → `language_affinities`. Skip this section if empty.
 /buddymon fight       — fight active encounter
 /buddymon catch       — catch active encounter
 /buddymon roster      — view full roster
+/buddymon statusline  — install statusline widget
 ```
