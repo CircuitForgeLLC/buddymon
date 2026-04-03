@@ -39,6 +39,77 @@ CATALOG="${PLUGIN_ROOT}/lib/catalog.json"
 build_context() {
     local ctx=""
 
+    # ── Session handoff from previous session ──────────────────────────────
+    local handoff_file="${BUDDYMON_DIR}/handoff.json"
+    if [[ -f "${handoff_file}" ]]; then
+        local handoff_block
+        handoff_block=$(python3 << PYEOF
+import json, os
+from datetime import datetime, timezone
+
+try:
+    h = json.load(open('${handoff_file}'))
+except Exception:
+    print('')
+    exit()
+
+buddy_id = h.get('buddy_id')
+if not buddy_id:
+    print('')
+    exit()
+
+import json as _json
+catalog_file = '${CATALOG}'
+try:
+    catalog = _json.load(open(catalog_file))
+    b = (catalog.get('buddymon', {}).get(buddy_id)
+         or catalog.get('evolutions', {}).get(buddy_id) or {})
+    display = b.get('display', buddy_id)
+except Exception:
+    display = buddy_id
+
+lines = [f"### 📬 From your last session ({h.get('date', '?')}) — {display}"]
+
+xp = h.get('xp_earned', 0)
+commits = h.get('commits', 0)
+langs = h.get('languages', [])
+caught = h.get('caught', [])
+
+if xp:
+    lines.append(f"- Earned **{xp} XP**")
+if commits:
+    lines.append(f"- Made **{commits} commit{'s' if commits != 1 else ''}**")
+if langs:
+    lines.append(f"- Languages touched: {', '.join(langs)}")
+if caught:
+    lines.append(f"- Caught: {', '.join(caught)}")
+
+challenge = h.get('challenge')
+challenge_completed = h.get('challenge_completed', False)
+if challenge:
+    status = "✅ completed" if challenge_completed else "⏳ still in progress"
+    lines.append(f"- Challenge **{challenge.get('name','?')}** — {status}")
+
+enc = h.get('active_encounter')
+if enc:
+    lines.append(f"- ⚠️  **Unresolved encounter carried over:** {enc.get('display', '?')} (strength: {enc.get('current_strength', 100)}%)")
+
+notes = h.get('notes', [])
+if notes:
+    lines.append("**Notes:**")
+    for n in notes:
+        lines.append(f"  · {n}")
+
+print('\n'.join(lines))
+PYEOF
+        )
+        if [[ -n "${handoff_block}" ]]; then
+            ctx+="${handoff_block}\n\n"
+        fi
+        # Archive handoff — consumed for this session
+        rm -f "${handoff_file}"
+    fi
+
     # ── No starter chosen yet ─────────────────────────────────────────────
     if [[ "$(buddymon_starter_chosen)" == "false" ]]; then
         ctx="## 🐾 Buddymon — First Encounter!\n\n"
