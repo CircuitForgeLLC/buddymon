@@ -7,8 +7,31 @@ source "${PLUGIN_ROOT}/lib/state.sh"
 
 buddymon_init
 
-ACTIVE_ID=$(buddymon_get_active)
-SESSION_XP=$(buddymon_get_session_xp)
+# Per-session state — keyed by process group ID so parallel sessions are isolated.
+SESSION_KEY=$(python3 -c "import os; print(os.getpgrp())")
+SESSION_FILE="${BUDDYMON_DIR}/sessions/${SESSION_KEY}.json"
+mkdir -p "${BUDDYMON_DIR}/sessions"
+
+# Create session file if missing, inheriting buddy from global active.json
+if [[ ! -f "${SESSION_FILE}" ]]; then
+    python3 << PYEOF
+import json, os
+active = {}
+try:
+    active = json.load(open('${BUDDYMON_DIR}/active.json'))
+except Exception:
+    pass
+session_state = {
+    "buddymon_id": active.get("buddymon_id"),
+    "challenge": active.get("challenge"),
+    "session_xp": 0,
+}
+json.dump(session_state, open('${SESSION_FILE}', 'w'), indent=2)
+PYEOF
+fi
+
+ACTIVE_ID=$(python3 -c "import json; d=json.load(open('${SESSION_FILE}')); print(d.get('buddymon_id',''))" 2>/dev/null)
+SESSION_XP=$(python3 -c "import json; d=json.load(open('${SESSION_FILE}')); print(d.get('session_xp',0))" 2>/dev/null)
 
 # Load catalog for buddy display info
 CATALOG="${PLUGIN_ROOT}/lib/catalog.json"

@@ -16,6 +16,27 @@ PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", str(Path(__file__).parent.par
 BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
 CATALOG_FILE = Path(PLUGIN_ROOT) / "lib" / "catalog.json"
 
+SESSION_KEY = str(os.getpgrp())
+SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
+
+
+def get_session_state() -> dict:
+    try:
+        with open(SESSION_FILE) as f:
+            return json.load(f)
+    except Exception:
+        global_active = {}
+        try:
+            with open(BUDDYMON_DIR / "active.json") as f:
+                global_active = json.load(f)
+        except Exception:
+            pass
+        return {
+            "buddymon_id": global_active.get("buddymon_id"),
+            "challenge": global_active.get("challenge"),
+            "session_xp": 0,
+        }
+
 
 def load_json(path):
     try:
@@ -55,9 +76,8 @@ def main():
     enc_data["active_encounter"] = enc
     save_json(enc_file, enc_data)
 
-    # Resolve buddy display name
-    active = load_json(BUDDYMON_DIR / "active.json")
-    buddy_id = active.get("buddymon_id")
+    # Resolve buddy display name from session-specific state
+    buddy_id = get_session_state().get("buddymon_id")
     buddy_display = "your buddy"
     if buddy_id:
         catalog = load_json(CATALOG_FILE)

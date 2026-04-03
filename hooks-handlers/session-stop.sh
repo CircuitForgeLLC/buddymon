@@ -6,10 +6,29 @@ source "${PLUGIN_ROOT}/lib/state.sh"
 
 buddymon_init
 
-ACTIVE_ID=$(buddymon_get_active)
-SESSION_XP=$(buddymon_get_session_xp)
+SESSION_KEY=$(python3 -c "import os; print(os.getpgrp())")
+SESSION_FILE="${BUDDYMON_DIR}/sessions/${SESSION_KEY}.json"
+
+ACTIVE_ID=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('${SESSION_FILE}'))
+    print(d.get('buddymon_id', ''))
+except Exception:
+    print('')
+" 2>/dev/null)
+
+SESSION_XP=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('${SESSION_FILE}'))
+    print(d.get('session_xp', 0))
+except Exception:
+    print(0)
+" 2>/dev/null)
 
 if [[ -z "${ACTIVE_ID}" ]] || [[ "${SESSION_XP}" -eq 0 ]]; then
+    [[ -f "${SESSION_FILE}" ]] && rm -f "${SESSION_FILE}"
     exit 0
 fi
 
@@ -20,17 +39,20 @@ SUMMARY=$(python3 << PYEOF
 import json, os
 
 catalog_file = '${CATALOG}'
-active_file = '${BUDDYMON_DIR}/active.json'
+session_state_file = '${SESSION_FILE}'
 roster_file = '${BUDDYMON_DIR}/roster.json'
 session_file = '${BUDDYMON_DIR}/session.json'
-encounters_file = '${BUDDYMON_DIR}/encounters.json'
 
 catalog = json.load(open(catalog_file))
-active = json.load(open(active_file))
+session_state = json.load(open(session_state_file))
 roster = json.load(open(roster_file))
-session = json.load(open(session_file))
+session = {}
+try:
+    session = json.load(open(session_file))
+except Exception:
+    pass
 
-buddy_id = active.get('buddymon_id')
+buddy_id = session_state.get('buddymon_id')
 if not buddy_id:
     print('')
     exit()
@@ -39,7 +61,7 @@ b = (catalog.get('buddymon', {}).get(buddy_id)
      or catalog.get('evolutions', {}).get(buddy_id) or {})
 display = b.get('display', buddy_id)
 
-xp_earned = active.get('session_xp', 0)
+xp_earned = session_state.get('session_xp', 0)
 level = roster.get('owned', {}).get(buddy_id, {}).get('level', 1)
 total_xp = roster.get('owned', {}).get(buddy_id, {}).get('xp', 0)
 xp_needed = level * 100
@@ -61,7 +83,7 @@ commits = session.get('commits_this_session', 0)
 tools = session.get('tools_used', 0)
 langs = session.get('languages_seen', [])
 challenge_completed = session.get('challenge_completed', False)
-challenge = active.get('challenge')
+challenge = session_state.get('challenge')
 
 lines = [f"\n## 🐾 Session complete — {display}"]
 lines.append(f"**+{xp_earned} XP earned** this session")
@@ -104,17 +126,10 @@ print('\n'.join(lines))
 PYEOF
 )
 
-# Reset session XP + clear challenge so next session assigns a fresh one
-python3 << PYEOF
-import json
-active_file = '${BUDDYMON_DIR}/active.json'
-active = json.load(open(active_file))
-active['session_xp'] = 0
-active['challenge'] = None
-json.dump(active, open(active_file, 'w'), indent=2)
-PYEOF
+# Clean up this session's state file — each session is ephemeral
+rm -f "${SESSION_FILE}"
 
-# Reset session file
+# Reset shared session.json for legacy compatibility
 buddymon_session_reset
 
 SUMMARY_JSON=$(python3 -c "import json,sys; print(json.dumps(sys.argv[1]))" "${SUMMARY}" 2>/dev/null)

@@ -118,12 +118,57 @@ Greet them and explain the encounter system.
 
 ## `assign <name>` — Assign Buddy
 
+Assignment is **per-session** — each Claude Code window can have its own buddy.
+It writes to the session state file only, not the global default.
+
 Fuzzy-match `<name>` against owned Buddymon (case-insensitive, partial).
 If ambiguous, list matches and ask which.
 If no name given, list roster and ask.
 
-On match, update `active.json` (buddy_id, reset session_xp, set challenge).
-Show challenge proposal with Accept / Decline / Reroll.
+On match, show challenge proposal with Accept / Decline / Reroll, then write:
+
+```python
+import json, os, random
+from pathlib import Path
+
+BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
+PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
+
+SESSION_KEY = str(os.getpgrp())
+SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
+SESSION_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+roster = json.load(open(BUDDYMON_DIR / "roster.json"))
+
+buddy_id = "Debuglin"  # replace with matched buddy id
+buddy_catalog = (catalog.get("buddymon", {}).get(buddy_id)
+                 or catalog.get("evolutions", {}).get(buddy_id) or {})
+challenges = buddy_catalog.get("challenges", [])
+
+# Load or init session state
+try:
+    session_state = json.load(open(SESSION_FILE))
+except Exception:
+    session_state = {}
+
+session_state["buddymon_id"] = buddy_id
+session_state["session_xp"] = 0
+session_state["challenge"] = random.choice(challenges) if challenges else None
+
+json.dump(session_state, open(SESSION_FILE, "w"), indent=2)
+
+# Also update global default so new sessions inherit this assignment
+active = {}
+try:
+    active = json.load(open(BUDDYMON_DIR / "active.json"))
+except Exception:
+    pass
+active["buddymon_id"] = buddy_id
+json.dump(active, open(BUDDYMON_DIR / "active.json", "w"), indent=2)
+```
+
+Show challenge proposal with Accept / Decline / Reroll (updating `session_state["challenge"]` accordingly).
 
 ---
 

@@ -24,6 +24,30 @@ PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", str(Path(__file__).parent.par
 BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
 CATALOG_FILE = Path(PLUGIN_ROOT) / "lib" / "catalog.json"
 
+# Each CC session gets its own state file keyed by process group ID.
+# All hooks within one session share the same PGRP, giving stable per-session state.
+SESSION_KEY = str(os.getpgrp())
+SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
+
+
+def get_session_state() -> dict:
+    """Read the current session's state file, falling back to global active.json."""
+    session = load_json(SESSION_FILE)
+    if not session:
+        # No session file yet — inherit from global default
+        global_active = load_json(BUDDYMON_DIR / "active.json")
+        session = {
+            "buddymon_id": global_active.get("buddymon_id"),
+            "challenge": global_active.get("challenge"),
+            "session_xp": 0,
+        }
+    return session
+
+
+def save_session_state(state: dict) -> None:
+    SESSION_FILE.parent.mkdir(parents=True, exist_ok=True)
+    save_json(SESSION_FILE, state)
+
 KNOWN_EXTENSIONS = {
     ".py": "Python", ".js": "JavaScript", ".ts": "TypeScript",
     ".jsx": "JavaScript/React", ".tsx": "TypeScript/React",
@@ -62,15 +86,13 @@ def get_state():
 
 
 def add_session_xp(amount: int):
-    active_file = BUDDYMON_DIR / "active.json"
-    roster_file = BUDDYMON_DIR / "roster.json"
-
-    active = load_json(active_file)
-    active["session_xp"] = active.get("session_xp", 0) + amount
-    buddy_id = active.get("buddymon_id")
-    save_json(active_file, active)
+    session = get_session_state()
+    session["session_xp"] = session.get("session_xp", 0) + amount
+    buddy_id = session.get("buddymon_id")
+    save_session_state(session)
 
     if buddy_id:
+        roster_file = BUDDYMON_DIR / "roster.json"
         roster = load_json(roster_file)
         if buddy_id in roster.get("owned", {}):
             roster["owned"][buddy_id]["xp"] = roster["owned"][buddy_id].get("xp", 0) + amount
@@ -153,8 +175,7 @@ def is_starter_chosen():
 
 
 def get_active_buddy_id():
-    active = load_json(BUDDYMON_DIR / "active.json")
-    return active.get("buddymon_id")
+    return get_session_state().get("buddymon_id")
 
 
 def get_active_encounter():
