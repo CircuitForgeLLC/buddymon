@@ -25,6 +25,7 @@ Parse `$ARGUMENTS` (trim whitespace, lowercase the first word) and dispatch:
 | `fight` | Fight active encounter |
 | `catch` | Catch active encounter |
 | `roster` | Full roster view |
+| `evolve` | Evolve active buddy (available at Lv.100) |
 | `statusline` | Install Buddymon statusline into settings.json |
 | `help` | Show command list |
 
@@ -300,6 +301,100 @@ Tier emoji mapping:
 - 👑 master (1200 XP)
 
 Read `roster.json` → `language_affinities`. Skip this section if empty.
+
+---
+
+## `evolve` — Evolve Buddy (Prestige)
+
+Evolution is available when the active buddy is **Lv.100** (total XP ≥ 9,900).
+Evolving resets the buddy to Lv.1 in their new form — but the evolved form has
+higher base stats and a better XP multiplier, so the second climb is faster.
+
+Read state and check eligibility:
+
+```python
+import json, os
+
+BUDDYMON_DIR = os.path.expanduser("~/.claude/buddymon")
+PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
+
+active = json.load(open(f"{BUDDYMON_DIR}/active.json"))
+roster = json.load(open(f"{BUDDYMON_DIR}/roster.json"))
+
+buddy_id = active.get("buddymon_id")
+owned = roster.get("owned", {})
+buddy_data = owned.get(buddy_id, {})
+level = buddy_data.get("level", 1)
+total_xp = buddy_data.get("xp", 0)
+
+# Check evolution entry in catalog
+catalog_entry = catalog.get("buddymon", {}).get(buddy_id) or catalog.get("evolutions", {}).get(buddy_id)
+evolutions = catalog_entry.get("evolutions", []) if catalog_entry else []
+evolution = next((e for e in evolutions if level >= e.get("level", 999)), None)
+```
+
+If `evolution` is None or level < 100: show current level and XP toward 100, no evolution available yet.
+
+If eligible, show evolution preview:
+
+```
+╔══════════════════════════════════════════════════════════╗
+║  ✨ Evolution Ready!                                    ║
+╠══════════════════════════════════════════════════════════╣
+║                                                          ║
+║  🔍 Debuglin  Lv.100  →  🔬 Verifex                   ║
+║                                                          ║
+║  Verifex: Sees the bug before the code is even written. ║
+║  catch_rate: 0.60 → 0.75  ·  xp_multiplier: 1.0 → 1.3 ║
+║                                                          ║
+║  ⚠️  Resets to Lv.1. Your caught monsters stay.        ║
+║                                                          ║
+╚══════════════════════════════════════════════════════════╝
+Evolve? (y/n)
+```
+
+On confirm, execute the evolution:
+
+```python
+from datetime import datetime, timezone
+
+into_id = evolution["into"]
+into_data = catalog["evolutions"][into_id]
+
+# Archive old form with evolution marker
+owned[buddy_id]["evolved_into"] = into_id
+owned[buddy_id]["evolved_at"] = datetime.now(timezone.utc).isoformat()
+
+# Create new form entry at Lv.1
+owned[into_id] = {
+    "id": into_id,
+    "display": into_data["display"],
+    "affinity": into_data.get("affinity", catalog_entry.get("affinity", "")),
+    "level": 1,
+    "xp": 0,
+    "evolved_from": buddy_id,
+    "evolved_at": datetime.now(timezone.utc).isoformat(),
+}
+
+# Carry challenges forward from original form
+challenges = catalog_entry.get("challenges") or into_data.get("challenges", [])
+roster["owned"] = owned
+json.dump(roster, open(f"{BUDDYMON_DIR}/roster.json", "w"), indent=2)
+
+# Update active to point to evolved form
+active["buddymon_id"] = into_id
+active["session_xp"] = 0
+active["challenge"] = challenges[0] if challenges else None
+json.dump(active, open(f"{BUDDYMON_DIR}/active.json", "w"), indent=2)
+```
+
+Show result:
+```
+✨ Debuglin evolved into 🔬 Verifex!
+   Starting fresh at Lv.1 — the second climb is faster.
+   New challenge: IRON TEST
+```
 
 ---
 
