@@ -234,7 +234,7 @@ def match_event_encounter(command: str, output: str, session: dict, catalog: dic
         trigger = enc.get("trigger_type", "")
 
         if trigger == "command":
-            if any(pat in command for pat in enc.get("command_patterns", [])):
+            if any(re.search(pat, command) for pat in enc.get("command_patterns", [])):
                 return enc
 
         elif trigger == "output":

@@ -389,6 +389,96 @@
       "test_file_patterns": ["\\.test\\.", "_test\\.", "test_", "_spec\\.", "\\.spec\\."],
       "description": "Haunts test suites. Drawn to assertions. Debuglin gets excited.",
       "flavor": "It wanted to make sure the test was named correctly."
+    },
+    "ReviewHawk": {
+      "id": "ReviewHawk",
+      "display": "🦅 ReviewHawk",
+      "type": "event_encounter",
+      "rarity": "uncommon",
+      "base_strength": 40,
+      "xp_reward": 85,
+      "catchable": true,
+      "defeatable": false,
+      "trigger_type": "command",
+      "command_patterns": [
+        "gh pr create",
+        "gh pr comment",
+        "gh issue create",
+        "gh issue comment",
+        "git push.*--set-upstream",
+        "git push -u"
+      ],
+      "description": "Appears the moment a PR is opened. Always finds the one thing you forgot to mention in the description.",
+      "flavor": "It left a comment. Several, actually."
+    },
+    "TicketGremlin": {
+      "id": "TicketGremlin",
+      "display": "🎫 TicketGremlin",
+      "type": "event_encounter",
+      "rarity": "common",
+      "base_strength": 30,
+      "xp_reward": 55,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "command",
+      "command_patterns": [
+        "jira ",
+        "linear ",
+        "curl.*atlassian",
+        "curl.*jira",
+        "curl.*linear.app",
+        "gh issue",
+        "curl.*api/v3/issues",
+        "curl.*rest/api"
+      ],
+      "description": "Spawned from ticket systems. Moves issues to 'In Review' before you're done.",
+      "flavor": "It already updated the status. The estimate too."
+    },
+    "PermWraith": {
+      "id": "PermWraith",
+      "display": "🚫 PermWraith",
+      "type": "event_encounter",
+      "rarity": "common",
+      "base_strength": 35,
+      "xp_reward": 60,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "output",
+      "error_patterns": [
+        "Permission denied",
+        "EACCES",
+        "EPERM",
+        "Operation not permitted",
+        "Access denied",
+        "permission denied",
+        "sudo:.*incorrect password",
+        "insufficient privileges",
+        "not permitted"
+      ],
+      "description": "Guards files it has no business guarding. Root of many late-night investigations.",
+      "flavor": "It owns the file. You don't. Discuss."
+    },
+    "SudoSprite": {
+      "id": "SudoSprite",
+      "display": "🔑 SudoSprite",
+      "type": "event_encounter",
+      "rarity": "uncommon",
+      "base_strength": 20,
+      "xp_reward": 70,
+      "catchable": true,
+      "defeatable": false,
+      "trigger_type": "command",
+      "command_patterns": [
+        "chmod ",
+        "chown ",
+        "sudo chmod",
+        "sudo chown",
+        "chgrp ",
+        "sudo chgrp",
+        "setfacl "
+      ],
+      "description": "Emerges when permissions are corrected. Doesn't fight — it just watches to make sure you chose the right octal.",
+      "flavor": "777 was always the answer. Never the right one."
     }
   },
 
