@@ -287,6 +287,111 @@
     }
   },
 
+  "event_encounters": {
+    "MergeMaw": {
+      "id": "MergeMaw",
+      "display": "🔀 MergeMaw",
+      "type": "event_encounter",
+      "rarity": "uncommon",
+      "base_strength": 45,
+      "xp_reward": 80,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "command",
+      "command_patterns": ["git merge", "git rebase"],
+      "description": "Emerges from the diff between two timelines. Loves conflicts.",
+      "flavor": "It has opinions about your whitespace."
+    },
+    "BranchSprite": {
+      "id": "BranchSprite",
+      "display": "🌿 BranchSprite",
+      "type": "event_encounter",
+      "rarity": "common",
+      "base_strength": 15,
+      "xp_reward": 50,
+      "catchable": true,
+      "defeatable": false,
+      "trigger_type": "command",
+      "command_patterns": ["git checkout -b", "git switch -c", "git branch "],
+      "description": "Appears when a new branch is born. Harmless. Almost cheerful.",
+      "flavor": "It wanted to come along for the feature."
+    },
+    "DepGolem": {
+      "id": "DepGolem",
+      "display": "📦 DepGolem",
+      "type": "event_encounter",
+      "rarity": "common",
+      "base_strength": 30,
+      "xp_reward": 45,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "command",
+      "command_patterns": ["pip install", "pip3 install", "npm install", "npm i ", "cargo add", "yarn add", "apt install", "brew install", "poetry add", "uv add", "uv pip install"],
+      "description": "Conjured from the package registry. Brings transitive dependencies.",
+      "flavor": "It brought 847 friends."
+    },
+    "FlakeDemon": {
+      "id": "FlakeDemon",
+      "display": "🎲 FlakeDemon",
+      "type": "event_encounter",
+      "rarity": "uncommon",
+      "base_strength": 55,
+      "xp_reward": 90,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "output",
+      "error_patterns": [
+        "FAILED",
+        "AssertionError",
+        "Expected.*[Rr]eceived",
+        "assert.*failed",
+        "\\d+ failed",
+        "FAIL\\b",
+        "test.*FAILED",
+        "FAILURES"
+      ],
+      "description": "Born from test infrastructure, not application code. The hardest kind to pin down.",
+      "flavor": "It passed on CI. It always passes on CI."
+    },
+    "PhantomPass": {
+      "id": "PhantomPass",
+      "display": "✅ PhantomPass",
+      "type": "event_encounter",
+      "rarity": "rare",
+      "base_strength": 10,
+      "xp_reward": 150,
+      "catchable": true,
+      "defeatable": false,
+      "trigger_type": "test_victory",
+      "success_patterns": [
+        "passed",
+        "PASSED",
+        "All tests passed",
+        "tests passed",
+        "✓",
+        "\\d+ passed",
+        "OK$",
+        "SUCCESS"
+      ],
+      "description": "Appears only when tests go green after going red. Rare. Fleeting. Cannot be fought — only caught.",
+      "flavor": "It was hiding in the red all along."
+    },
+    "TestSpecter": {
+      "id": "TestSpecter",
+      "display": "🧪 TestSpecter",
+      "type": "event_encounter",
+      "rarity": "uncommon",
+      "base_strength": 25,
+      "xp_reward": 65,
+      "catchable": true,
+      "defeatable": true,
+      "trigger_type": "test_file",
+      "test_file_patterns": ["\\.test\\.", "_test\\.", "test_", "_spec\\.", "\\.spec\\."],
+      "description": "Haunts test suites. Drawn to assertions. Debuglin gets excited.",
+      "flavor": "It wanted to make sure the test was named correctly."
+    }
+  },
+
   "buddymon": {
     "Pyrobyte": {
       "id": "Pyrobyte",
