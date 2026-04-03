@@ -80,24 +80,36 @@ def main():
     catchable = enc.get("catchable", True)
     flavor = monster.get("flavor", "")
 
-    catchable_str = "[catchable · catch only]" if not defeatable else f"[{rarity} · {'catchable' if catchable else ''}]"
-
-    lines = [
-        f"\n💀 **{enc['display']} appeared!**  {catchable_str}",
-        f"   Strength: {strength}%  ·  Rarity: {stars}",
-    ]
-    if flavor:
-        lines.append(f"   *{flavor}*")
-    if not defeatable:
-        lines.append("   ⚠️  CANNOT BE DEFEATED — catch only")
-    lines += [
-        "",
-        f"   **{buddy_display}** is ready to battle!",
-        "",
-        "   `[FIGHT]` Fix the bug → `/buddymon fight` to claim XP",
-        "   `[CATCH]` Weaken first (test/repro/comment) → `/buddymon catch`",
-        "   `[FLEE]`  Ignore → monster grows stronger",
-    ]
+    if enc.get("wounded"):
+        # Wounded re-announcement — urgent, catch-or-lose framing
+        lines = [
+            f"\n🩹 **{enc['display']} is wounded and fleeing!**",
+            f"   Strength: {strength}%  ·  This is your last chance to catch it.",
+            "",
+            f"   **{buddy_display}** is ready — move fast!",
+            "",
+            "   `[CATCH]` → `/buddymon catch`  (near-guaranteed at 5% strength)",
+            "   `[IGNORE]` → it flees on the next clean run",
+        ]
+    else:
+        # Normal first appearance
+        catchable_str = "[catchable · catch only]" if not defeatable else f"[{rarity} · {'catchable' if catchable else ''}]"
+        lines = [
+            f"\n💀 **{enc['display']} appeared!**  {catchable_str}",
+            f"   Strength: {strength}%  ·  Rarity: {stars}",
+        ]
+        if flavor:
+            lines.append(f"   *{flavor}*")
+        if not defeatable:
+            lines.append("   ⚠️  CANNOT BE DEFEATED — catch only")
+        lines += [
+            "",
+            f"   **{buddy_display}** is ready to battle!",
+            "",
+            "   `[FIGHT]` Fix the bug → `/buddymon fight` to claim XP",
+            "   `[CATCH]` Weaken first (test/repro/comment) → `/buddymon catch`",
+            "   `[FLEE]`  Ignore → monster grows stronger",
+        ]
 
     msg = "\n".join(lines)
     print(json.dumps({
