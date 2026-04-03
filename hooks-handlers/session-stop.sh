@@ -126,6 +126,63 @@ print('\n'.join(lines))
 PYEOF
 )
 
+# Write handoff.json for next session to pick up
+python3 << PYEOF
+import json, os
+from datetime import datetime, timezone
+
+session_state_file = '${SESSION_FILE}'
+session_file = '${BUDDYMON_DIR}/session.json'
+encounters_file = '${BUDDYMON_DIR}/encounters.json'
+handoff_file = '${BUDDYMON_DIR}/handoff.json'
+
+session_state = {}
+try:
+    session_state = json.load(open(session_state_file))
+except Exception:
+    pass
+session_data = {}
+try:
+    session_data = json.load(open(session_file))
+except Exception:
+    pass
+encounters = {}
+try:
+    encounters = json.load(open(encounters_file))
+except Exception:
+    pass
+
+# Collect caught monsters from this session
+caught_this_session = [
+    e.get('display', e.get('id', '?'))
+    for e in encounters.get('history', [])
+    if e.get('outcome') == 'caught'
+    and e.get('timestamp', '') >= datetime.now(timezone.utc).strftime('%Y-%m-%d')
+]
+
+# Carry over any existing handoff notes (user-added via /buddymon note)
+existing = {}
+try:
+    existing = json.load(open(handoff_file))
+except Exception:
+    pass
+
+handoff = {
+    "date": datetime.now(timezone.utc).strftime('%Y-%m-%d'),
+    "buddy_id": session_state.get('buddymon_id'),
+    "xp_earned": session_state.get('session_xp', 0),
+    "commits": session_data.get('commits_this_session', 0),
+    "languages": session_data.get('languages_seen', []),
+    "caught": caught_this_session,
+    "challenge": session_state.get('challenge'),
+    "challenge_completed": session_data.get('challenge_completed', False),
+    "active_encounter": encounters.get('active_encounter'),
+    "notes": existing.get('notes', []),  # preserve any manual notes
+}
+
+json.dump(handoff, open(handoff_file, 'w'), indent=2)
+PYEOF
+
 # Clean up this session's state file — each session is ephemeral
 rm -f "${SESSION_FILE}"
 
