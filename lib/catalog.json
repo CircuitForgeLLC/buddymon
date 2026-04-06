@@ -846,6 +846,52 @@
       ],
       "weaken_actions": [],
       "flavor": "Some debts cannot be paid. They can only be carried responsibly."
+    },
+    "Sedamentalist": {
+      "id": "Sedamentalist",
+      "display": "\ud83e\udea8 Sedamentalist",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 65,
+      "xp_reward": 90,
+      "catchable": true,
+      "defeatable": true,
+      "catch_requires": [
+        "dry_run_first",
+        "verify_output"
+      ],
+      "description": "A sedimentary entity that processes files layer by layer, line by line. When it goes wrong, the stratigraphy is unreadable \u2014 or simply gone.",
+      "error_patterns": [
+        "sed:",
+        "sed -i",
+        "sed: 1: ",
+        "sed: RE error",
+        "sed: no previous regular expression",
+        "sed: -e expression",
+        "unterminated `s' command",
+        "unterminated address regex",
+        "awk:",
+        "awk: syntax error",
+        "gawk:",
+        "0 bytes",
+        "truncated",
+        "file.*empty after",
+        "overwrite.*failed",
+        "in-place.*error",
+        "backreference",
+        "\\\\1.*invalid"
+      ],
+      "weaken_actions": [
+        {
+          "action": "dry_run_first",
+          "strength_reduction": 40
+        },
+        {
+          "action": "verify_output",
+          "strength_reduction": 35
+        }
+      ],
+      "flavor": "Knows every line of your file. Edited them all. Saved none."
     }
   },
   "event_encounters": {
