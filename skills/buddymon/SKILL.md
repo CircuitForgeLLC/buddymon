@@ -298,8 +298,9 @@ if not buddy_id:
 
 enc = encounters.get("active_encounter")
 
-# Clear catch_pending before rolling (win or lose)
-enc["catch_pending"] = False
+# catch_pending is cleared by the PostToolUse hook after it fires on this
+# Bash run — do NOT clear it here or the hook will see it already gone and
+# may auto-resolve the encounter on the same run as the catch attempt.
 
 buddy_data = (catalog.get("buddymon", {}).get(buddy_id)
               or catalog.get("evolutions", {}).get(buddy_id) or {})
@@ -339,7 +340,8 @@ if success:
     json.dump(encounters, open(enc_file, "w"), indent=2)
     print(f"caught:{xp}")
 else:
-    # Save cleared catch_pending back on failure
+    # Leave catch_pending as-is — the PostToolUse hook clears it after this
+    # Bash run completes, giving one full clean run before auto-resolve resumes.
     encounters["active_encounter"] = enc
     json.dump(encounters, open(enc_file, "w"), indent=2)
     print(f"failed:{int(catch_rate * 100)}")
