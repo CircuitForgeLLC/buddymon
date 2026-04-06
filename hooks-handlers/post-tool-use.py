@@ -200,6 +200,7 @@ def wound_encounter() -> None:
     enc["current_strength"] = 5
     enc["wounded"] = True
     enc["announced"] = False   # triggers UserPromptSubmit re-announcement
+    enc["last_wounded_at"] = datetime.now().astimezone().isoformat()
     data["active_encounter"] = enc
     save_json(enc_file, data)
 
@@ -464,18 +465,47 @@ def main():
                     enc_data = load_json(BUDDYMON_DIR / "encounters.json")
                     enc_data["active_encounter"] = existing
                     save_json(BUDDYMON_DIR / "encounters.json", enc_data)
-                elif existing.get("wounded"):
-                    # Wounded: 35% chance to flee per clean run (avg ~3 runs to escape)
-                    if random.random() < 0.35:
-                        xp, display = auto_resolve_encounter(existing, buddy_id)
-                        messages.append(
-                            f"\n💨 **{display} fled!** (escaped while wounded)\n"
-                            f"   {buddy_display} gets partial XP: +{xp}\n"
-                        )
                 else:
-                    # Healthy: 50% chance to wound per clean run (avg ~2 runs to wound)
-                    if random.random() < 0.50:
-                        wound_encounter()
+                    # Auto-attack rates scaled by encounter rarity and buddy level.
+                    # Multiple parallel sessions share encounters.json — a wound
+                    # cooldown prevents them pile-driving the same encounter.
+                    rarity = existing.get("rarity", "common")
+                    WOUND_RATES = {
+                        "very_common": 0.55, "common": 0.40,
+                        "uncommon": 0.22, "rare": 0.10, "legendary": 0.02,
+                    }
+                    RESOLVE_RATES = {
+                        "very_common": 0.45, "common": 0.28,
+                        "uncommon": 0.14, "rare": 0.05, "legendary": 0.01,
+                    }
+                    roster = load_json(BUDDYMON_DIR / "roster.json")
+                    buddy_level = roster.get("owned", {}).get(buddy_id, {}).get("level", 1)
+                    level_scale = 1.0 + (buddy_level / 100) * 0.25
+
+                    # Wound cooldown: skip if another session wounded within 30s
+                    last_wound = existing.get("last_wounded_at", "")
+                    wound_cooldown_ok = True
+                    if last_wound:
+                        try:
+                            from datetime import timezone as _tz
+                            last_dt = datetime.fromisoformat(last_wound)
+                            age = (datetime.now(_tz.utc) - last_dt).total_seconds()
+                            wound_cooldown_ok = age > 30
+                        except Exception:
+                            pass
+
+                    if existing.get("wounded"):
+                        resolve_rate = min(0.70, RESOLVE_RATES.get(rarity, 0.28) * level_scale)
+                        if wound_cooldown_ok and random.random() < resolve_rate:
+                            xp, display = auto_resolve_encounter(existing, buddy_id)
+                            messages.append(
+                                f"\n💨 **{display} fled!** (escaped while wounded)\n"
+                                f"   {buddy_display} gets partial XP: +{xp}\n"
+                            )
+                    else:
+                        wound_rate = min(0.85, WOUND_RATES.get(rarity, 0.40) * level_scale)
+                        if wound_cooldown_ok and random.random() < wound_rate:
+                            wound_encounter()
             # else: monster still present, no message — don't spam every tool call
         elif output or command:
             # No active encounter — check for bug monster first, then event encounters
