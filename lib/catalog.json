@@ -847,9 +847,9 @@
       "weaken_actions": [],
       "flavor": "Some debts cannot be paid. They can only be carried responsibly."
     },
-    "Sedamentalist": {
-      "id": "Sedamentalist",
-      "display": "\ud83e\udea8 Sedamentalist",
+    "Sedamentalisk": {
+      "id": "Sedamentalisk",
+      "display": "\ud83e\udea8 Sedamentalisk",
       "type": "bug_monster",
       "rarity": "uncommon",
       "base_strength": 65,
