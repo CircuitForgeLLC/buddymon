@@ -457,8 +457,13 @@ def main():
             # resolving encounters before the user can react.
             if output and not encounter_still_present(existing, output, catalog):
                 if existing.get("catch_pending"):
-                    # User invoked /buddymon catch — hold the monster for them
-                    pass
+                    # User invoked /buddymon catch — hold the monster for this run.
+                    # Clear the flag now so the NEXT clean run resumes normal behavior.
+                    # The skill sets it again at the start of each /buddymon catch call.
+                    existing["catch_pending"] = False
+                    enc_data = load_json(BUDDYMON_DIR / "encounters.json")
+                    enc_data["active_encounter"] = existing
+                    save_json(BUDDYMON_DIR / "encounters.json", enc_data)
                 elif existing.get("wounded"):
                     # Wounded: 35% chance to flee per clean run (avg ~3 runs to escape)
                     if random.random() < 0.35:
