@@ -30,6 +30,28 @@ json.dump(session_state, open('${SESSION_FILE}', 'w'), indent=2)
 PYEOF
 fi
 
+# Clean up session files for dead processes (runs async-style; errors ignored)
+python3 << 'PYEOF' 2>/dev/null &
+import os, glob, json
+for f in glob.glob(os.path.expanduser("~/.claude/buddymon/sessions/*.json")):
+    pid_str = os.path.basename(f).replace('.json', '')
+    try:
+        pid = int(pid_str)
+        # Check if the process group still exists
+        os.killpg(pid, 0)
+    except (ValueError, ProcessLookupError, PermissionError):
+        # PermissionError means the process exists (just not ours) — keep it
+        # ProcessLookupError means it's dead — remove
+        try:
+            d = json.load(open(f))
+            if '_version' not in d:  # only remove valid-format dead sessions
+                os.remove(f)
+        except Exception:
+            pass
+    except Exception:
+        pass
+PYEOF
+
 ACTIVE_ID=$(python3 -c "import json; d=json.load(open('${SESSION_FILE}')); print(d.get('buddymon_id',''))" 2>/dev/null)
 SESSION_XP=$(python3 -c "import json; d=json.load(open('${SESSION_FILE}')); print(d.get('session_xp',0))" 2>/dev/null)
 

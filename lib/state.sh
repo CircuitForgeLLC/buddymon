@@ -6,7 +6,9 @@ BUDDYMON_DIR="${HOME}/.claude/buddymon"
 ROSTER_FILE="${BUDDYMON_DIR}/roster.json"
 ENCOUNTERS_FILE="${BUDDYMON_DIR}/encounters.json"
 ACTIVE_FILE="${BUDDYMON_DIR}/active.json"
-SESSION_FILE="${BUDDYMON_DIR}/session.json"
+# Named SESSION_DATA_FILE (not SESSION_FILE) to avoid shadowing the
+# per-session state file hooks define as SESSION_FILE=sessions/<pgrp>.json
+SESSION_DATA_FILE="${BUDDYMON_DIR}/session.json"
 
 buddymon_init() {
     mkdir -p "${BUDDYMON_DIR}"
@@ -42,7 +44,7 @@ EOF
 EOF
     fi
 
-    if [[ ! -f "${SESSION_FILE}" ]]; then
+    if [[ ! -f "${SESSION_DATA_FILE}" ]]; then
         buddymon_session_reset
     fi
 }
@@ -50,7 +52,7 @@ EOF
 buddymon_session_reset() {
     local ts
     ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-    cat > "${SESSION_FILE}" << EOF
+    cat > "${SESSION_DATA_FILE}" << EOF
 {
   "_version": 1,
   "started_at": "${ts}",

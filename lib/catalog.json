@@ -646,6 +646,206 @@
         }
       ],
       "flavor": "If you catch everything, you learn nothing."
+    },
+    "LeakWraith": {
+      "id": "LeakWraith",
+      "display": "\ud83d\udd11 LeakWraith",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 70,
+      "xp_reward": 120,
+      "catchable": true,
+      "defeatable": false,
+      "catch_requires": [
+        "rotate_secret",
+        "audit_exposure",
+        "add_secret_scan"
+      ],
+      "description": "A specter that feasts on exposed credentials. It doesn't steal them \u2014 it just shows them to everyone.",
+      "error_patterns": [
+        "api_key",
+        "secret_key",
+        "BEGIN.*PRIVATE KEY",
+        "PRIVATE KEY-----",
+        "password\\s*=\\s*['\"][^'\"]+['\"]",
+        "token\\s*=\\s*['\"][^'\"]+['\"]",
+        "Authorization: Bearer",
+        "hardcoded.*secret",
+        "leaked.*credential",
+        "exposed.*secret",
+        "sk-[a-zA-Z0-9]{20}",
+        "credential.*plain"
+      ],
+      "weaken_actions": [
+        {
+          "action": "rotate_secret",
+          "strength_reduction": 40
+        },
+        {
+          "action": "audit_exposure",
+          "strength_reduction": 20
+        },
+        {
+          "action": "add_secret_scan",
+          "strength_reduction": 20
+        }
+      ],
+      "flavor": "Rotation is not optional. Neither is the audit."
+    },
+    "CipherNull": {
+      "id": "CipherNull",
+      "display": "\ud83d\udd10 CipherNull",
+      "type": "bug_monster",
+      "rarity": "uncommon",
+      "base_strength": 60,
+      "xp_reward": 100,
+      "catchable": true,
+      "defeatable": true,
+      "catch_requires": [
+        "replace_weak_crypto",
+        "add_crypto_test"
+      ],
+      "description": "A demon born from broken encryption. Every MD5 it touches makes it stronger.",
+      "error_patterns": [
+        "md5\\(",
+        "sha1\\(",
+        "hashlib.md5",
+        "hashlib.sha1",
+        "DES.new",
+        "AES.*ECB",
+        "ECB mode",
+        "Math.random.*token",
+        "Math.random.*secret",
+        "rand().*password",
+        "random.*nonce",
+        "base64.*password",
+        "rot13"
+      ],
+      "weaken_actions": [
+        {
+          "action": "replace_weak_crypto",
+          "strength_reduction": 50
+        },
+        {
+          "action": "add_crypto_test",
+          "strength_reduction": 25
+        }
+      ],
+      "flavor": "MD5 was deprecated before some of your dependencies were written."
+    },
+    "ConsentShadow": {
+      "id": "ConsentShadow",
+      "display": "\ud83d\udc64 ConsentShadow",
+      "type": "bug_monster",
+      "rarity": "rare",
+      "base_strength": 85,
+      "xp_reward": 220,
+      "catchable": true,
+      "defeatable": false,
+      "catch_requires": [
+        "add_consent_gate",
+        "document_data_flow",
+        "add_opt_out"
+      ],
+      "description": "A privacy violation given form. It tracks everything, logs everything, consents to nothing. At CircuitForge, it's the end boss.",
+      "error_patterns": [
+        "track.*user",
+        "user.*tracking",
+        "analytics.*event",
+        "fingerprint.*user",
+        "browser.*fingerprint",
+        "log.*email",
+        "log.*ip.*address",
+        "collect.*personal",
+        "behavioral.*profil",
+        "third.party.*tracking",
+        "telemetry.*enabled",
+        "send.*analytics"
+      ],
+      "weaken_actions": [
+        {
+          "action": "add_consent_gate",
+          "strength_reduction": 35
+        },
+        {
+          "action": "document_data_flow",
+          "strength_reduction": 25
+        },
+        {
+          "action": "add_opt_out",
+          "strength_reduction": 30
+        }
+      ],
+      "flavor": "Plain-language consent. Always. No pre-checked boxes."
+    },
+    "ThrottleDemon": {
+      "id": "ThrottleDemon",
+      "display": "\u23f1\ufe0f  ThrottleDemon",
+      "type": "bug_monster",
+      "rarity": "common",
+      "base_strength": 40,
+      "xp_reward": 60,
+      "catchable": true,
+      "defeatable": true,
+      "catch_requires": [
+        "add_backoff",
+        "add_rate_limit_handling"
+      ],
+      "description": "Manifests from ignored 429s. Feed it a proper backoff strategy.",
+      "error_patterns": [
+        "429",
+        "Too Many Requests",
+        "rate.limit.*exceeded",
+        "rate limit",
+        "quota.*exceeded",
+        "throttle",
+        "throttled",
+        "RetryAfter",
+        "Retry-After",
+        "backoff.*error",
+        "RateLimitError",
+        "burst.*limit"
+      ],
+      "weaken_actions": [
+        {
+          "action": "add_backoff",
+          "strength_reduction": 35
+        },
+        {
+          "action": "add_rate_limit_handling",
+          "strength_reduction": 40
+        }
+      ],
+      "flavor": "Exponential backoff with jitter. Every time."
+    },
+    "PrivacyLich": {
+      "id": "PrivacyLich",
+      "display": "\ud83d\udcdc PrivacyLich",
+      "type": "bug_monster",
+      "rarity": "legendary",
+      "base_strength": 100,
+      "xp_reward": 500,
+      "catchable": false,
+      "defeatable": false,
+      "catch_requires": [],
+      "description": "An ancient entity. Data it touched never truly disappears. Cannot be caught or defeated \u2014 only contained through rigorous compliance work.",
+      "error_patterns": [
+        "GDPR",
+        "CCPA",
+        "LGPD",
+        "erasure.*request",
+        "right to be forgotten",
+        "data subject",
+        "DSAR",
+        "data.*breach",
+        "personal.*data.*leak",
+        "PII.*exposed",
+        "regulatory.*violation",
+        "compliance.*failure",
+        "notification.*breach"
+      ],
+      "weaken_actions": [],
+      "flavor": "Some debts cannot be paid. They can only be carried responsibly."
     }
   },
   "event_encounters": {

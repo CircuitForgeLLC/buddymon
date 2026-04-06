@@ -41,7 +41,7 @@ import json, os
 catalog_file = '${CATALOG}'
 session_state_file = '${SESSION_FILE}'
 roster_file = '${BUDDYMON_DIR}/roster.json'
-session_file = '${BUDDYMON_DIR}/session.json'
+session_file = '${BUDDYMON_DIR}/session.json'  # SESSION_DATA_FILE from state.sh
 
 catalog = json.load(open(catalog_file))
 session_state = json.load(open(session_state_file))
@@ -132,7 +132,7 @@ import json, os
 from datetime import datetime, timezone
 
 session_state_file = '${SESSION_FILE}'
-session_file = '${BUDDYMON_DIR}/session.json'
+session_file = '${BUDDYMON_DIR}/session.json'  # SESSION_DATA_FILE from state.sh
 encounters_file = '${BUDDYMON_DIR}/encounters.json'
 handoff_file = '${BUDDYMON_DIR}/handoff.json'
 
