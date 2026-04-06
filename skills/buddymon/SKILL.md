@@ -236,8 +236,10 @@ if enc:
     json.dump(encounters, open(enc_file, "w"), indent=2)
 ```
 
-Show strength and weakening status. If `enc.get("wounded")` is True, note that
-it's already at 5% and a catch is near-guaranteed. Explain weaken actions:
+**If `enc.get("wounded")` is True (strength already at 5%), skip all weakening
+Q&A and go straight to the catch roll — do not ask, just throw.**
+
+Otherwise, show strength and weakening status. Explain weaken actions:
 - Write a failing test → -20% strength
 - Isolate reproduction case → -20% strength
 - Add documenting comment → -10% strength
@@ -249,21 +251,32 @@ leaves it active without the flag so auto-resolve resumes naturally):
 ```python
 import json, os, random
 from datetime import datetime, timezone
+from pathlib import Path
 
-BUDDYMON_DIR = os.path.expanduser("~/.claude/buddymon")
+BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
 PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
 catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
 
-enc_file = f"{BUDDYMON_DIR}/encounters.json"
-active_file = f"{BUDDYMON_DIR}/active.json"
-roster_file = f"{BUDDYMON_DIR}/roster.json"
+enc_file = BUDDYMON_DIR / "encounters.json"
+active_file = BUDDYMON_DIR / "active.json"
+roster_file = BUDDYMON_DIR / "roster.json"
 
 encounters = json.load(open(enc_file))
-active = json.load(open(active_file))
 roster = json.load(open(roster_file))
 
+# Buddy lookup: prefer per-session file, fall back to active.json
+SESSION_KEY = str(os.getpgrp())
+SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
+try:
+    session_state = json.load(open(SESSION_FILE))
+    buddy_id = session_state.get("buddymon_id")
+except Exception:
+    buddy_id = None
+if not buddy_id:
+    active = json.load(open(active_file))
+    buddy_id = active.get("buddymon_id")
+
 enc = encounters.get("active_encounter")
-buddy_id = active.get("buddymon_id")
 
 # Clear catch_pending before rolling (win or lose)
 enc["catch_pending"] = False
@@ -287,8 +300,15 @@ if success:
         "caught_at": datetime.now(timezone.utc).isoformat(),
     }
     roster.setdefault("owned", {})[enc["id"]] = caught_entry
-    active["session_xp"] = active.get("session_xp", 0) + xp
-    json.dump(active, open(active_file, "w"), indent=2)
+    # Write XP to session file if it exists, otherwise active.json
+    try:
+        ss = json.load(open(SESSION_FILE))
+        ss["session_xp"] = ss.get("session_xp", 0) + xp
+        json.dump(ss, open(SESSION_FILE, "w"), indent=2)
+    except Exception:
+        active = json.load(open(active_file))
+        active["session_xp"] = active.get("session_xp", 0) + xp
+        json.dump(active, open(active_file, "w"), indent=2)
     if buddy_id and buddy_id in roster.get("owned", {}):
         roster["owned"][buddy_id]["xp"] = roster["owned"][buddy_id].get("xp", 0) + xp
     json.dump(roster, open(roster_file, "w"), indent=2)
