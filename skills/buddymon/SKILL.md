@@ -88,10 +88,14 @@ Ask for 1, 2, or 3. On choice, write to roster + active:
 
 ```python
 import json, os
+from pathlib import Path
 
-BUDDYMON_DIR = os.path.expanduser("~/.claude/buddymon")
-PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
-catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
+BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
+_pr = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+_catalog_paths = [Path(_pr) / "lib/catalog.json" if _pr else None,
+    Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/catalog.json",
+    Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.1/lib/catalog.json"]
+catalog = json.load(open(next(p for p in _catalog_paths if p and p.exists())))
 
 starters = ["Pyrobyte", "Debuglin", "Minimox"]
 choice = starters[0]  # replace with user's choice (index 0/1/2)
@@ -132,8 +136,11 @@ import json, os, random
 from pathlib import Path
 
 BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
-PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
-catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
+_pr = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+_catalog_paths = [Path(_pr) / "lib/catalog.json" if _pr else None,
+    Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/catalog.json",
+    Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.1/lib/catalog.json"]
+catalog = json.load(open(next(p for p in _catalog_paths if p and p.exists())))
 
 SESSION_KEY = str(os.getpgrp())
 SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
@@ -249,13 +256,26 @@ Ask which weakening actions have been done. Apply reductions to `current_strengt
 Catch roll (clear `catch_pending` before rolling — success clears encounter, failure
 leaves it active without the flag so auto-resolve resumes naturally):
 ```python
-import json, os, random
+import json, os, random, glob
 from datetime import datetime, timezone
 from pathlib import Path
 
 BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
-PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
-catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
+
+# PLUGIN_ROOT is not always set when skills run via Bash heredoc — search known paths
+def find_catalog():
+    plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+    candidates = [
+        Path(plugin_root) / "lib" / "catalog.json" if plugin_root else None,
+        Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/catalog.json",
+        Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.1/lib/catalog.json",
+    ]
+    for p in candidates:
+        if p and p.exists():
+            return json.load(open(p))
+    raise FileNotFoundError("buddymon catalog not found — check plugin installation")
+
+catalog = find_catalog()
 
 enc_file = BUDDYMON_DIR / "encounters.json"
 active_file = BUDDYMON_DIR / "active.json"
@@ -379,13 +399,17 @@ Read state and check eligibility:
 
 ```python
 import json, os
+from pathlib import Path
 
-BUDDYMON_DIR = os.path.expanduser("~/.claude/buddymon")
-PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
-catalog = json.load(open(f"{PLUGIN_ROOT}/lib/catalog.json"))
+BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
+_pr = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+_catalog_paths = [Path(_pr) / "lib/catalog.json" if _pr else None,
+    Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/catalog.json",
+    Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.1/lib/catalog.json"]
+catalog = json.load(open(next(p for p in _catalog_paths if p and p.exists())))
 
-active = json.load(open(f"{BUDDYMON_DIR}/active.json"))
-roster = json.load(open(f"{BUDDYMON_DIR}/roster.json"))
+active = json.load(open(BUDDYMON_DIR / "active.json"))
+roster = json.load(open(BUDDYMON_DIR / "roster.json"))
 
 buddy_id = active.get("buddymon_id")
 owned = roster.get("owned", {})
@@ -477,11 +501,17 @@ active encounter in red:
 Run this Python to install:
 
 ```python
-import json, os, shutil
+import json, os
+from pathlib import Path
 
-SETTINGS = os.path.expanduser("~/.claude/settings.json")
-PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
-SCRIPT = os.path.join(PLUGIN_ROOT, "lib", "statusline.sh")
+SETTINGS = Path.home() / ".claude" / "settings.json"
+# Prefer the stable user-local copy installed by install.sh
+_script_candidates = [
+    Path.home() / ".claude/buddymon/statusline.sh",
+    Path(os.environ.get("CLAUDE_PLUGIN_ROOT", "")) / "lib/statusline.sh" if os.environ.get("CLAUDE_PLUGIN_ROOT") else None,
+    Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/statusline.sh",
+]
+SCRIPT = next(str(p) for p in _script_candidates if p and p.exists())
 
 settings = json.load(open(SETTINGS))
 
