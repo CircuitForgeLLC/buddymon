@@ -278,10 +278,14 @@ if not os.path.exists(log_path):
     print("   Created hook_debug.log")
 PYEOF
 
-    # Copy statusline script to stable user-local path
+    # Copy lib scripts to stable user-local path (accessible even without CLAUDE_PLUGIN_ROOT)
     cp "${REPO_DIR}/lib/statusline.sh" "${BUDDYMON_DIR}/statusline.sh"
     chmod +x "${BUDDYMON_DIR}/statusline.sh"
     ok "Installed statusline.sh → ${BUDDYMON_DIR}/statusline.sh"
+
+    cp "${REPO_DIR}/lib/cli.py" "${BUDDYMON_DIR}/cli.py"
+    chmod +x "${BUDDYMON_DIR}/cli.py"
+    ok "Installed cli.py → ${BUDDYMON_DIR}/cli.py"
 
     # Install statusline into settings.json if not already configured
     python3 << PYEOF

@@ -34,7 +34,15 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "It was there this whole time. You just never checked."
+      "flavor": "It was there this whole time. You just never checked.",
+      "weak_against": [
+        "typed",
+        "dynamic"
+      ],
+      "strong_against": [
+        "systems"
+      ],
+      "immune_to": []
     },
     "FencepostDemon": {
       "id": "FencepostDemon",
@@ -67,7 +75,15 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "Always one step ahead. Or behind. It's hard to tell."
+      "flavor": "Always one step ahead. Or behind. It's hard to tell.",
+      "weak_against": [
+        "typed",
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "TypeGreml": {
       "id": "TypeGreml",
@@ -100,7 +116,14 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "It only attacks when you're absolutely sure about the type."
+      "flavor": "It only attacks when you're absolutely sure about the type.",
+      "weak_against": [
+        "typed"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "SyntaxSerpent": {
       "id": "SyntaxSerpent",
@@ -130,7 +153,13 @@
           "strength_reduction": 20
         }
       ],
-      "flavor": "You'll be embarrassed you let this one survive long enough to catch."
+      "flavor": "You'll be embarrassed you let this one survive long enough to catch.",
+      "weak_against": [
+        "typed",
+        "shell"
+      ],
+      "strong_against": [],
+      "immune_to": []
     },
     "CORSCurse": {
       "id": "CORSCurse",
@@ -163,7 +192,16 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "It's not your fault. Well. It kind of is."
+      "flavor": "It's not your fault. Well. It kind of is.",
+      "weak_against": [
+        "web",
+        "typed"
+      ],
+      "strong_against": [
+        "systems",
+        "data"
+      ],
+      "immune_to": []
     },
     "LoopLich": {
       "id": "LoopLich",
@@ -200,7 +238,15 @@
           "strength_reduction": 15
         }
       ],
-      "flavor": "The exit condition was always there. You just never believed in it."
+      "flavor": "The exit condition was always there. You just never believed in it.",
+      "weak_against": [
+        "typed",
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "RacePhantom": {
       "id": "RacePhantom",
@@ -235,7 +281,16 @@
           "strength_reduction": 15
         }
       ],
-      "flavor": "You've proven it exists. That's honestly impressive on its own."
+      "flavor": "You've proven it exists. That's honestly impressive on its own.",
+      "weak_against": [
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": [
+        "web"
+      ]
     },
     "FossilGolem": {
       "id": "FossilGolem",
@@ -269,7 +324,13 @@
           "strength_reduction": 20
         }
       ],
-      "flavor": "It survived every major version. It will outlast you."
+      "flavor": "It survived every major version. It will outlast you.",
+      "weak_against": [
+        "shell",
+        "typed"
+      ],
+      "strong_against": [],
+      "immune_to": []
     },
     "ShadowBit": {
       "id": "ShadowBit",
@@ -314,7 +375,16 @@
           "strength_reduction": 20
         }
       ],
-      "flavor": "Defeat is not an option. Containment is the only victory."
+      "flavor": "Defeat is not an option. Containment is the only victory.",
+      "weak_against": [
+        "systems",
+        "typed"
+      ],
+      "strong_against": [
+        "dynamic",
+        "web"
+      ],
+      "immune_to": []
     },
     "VoidSpecter": {
       "id": "VoidSpecter",
@@ -348,7 +418,14 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "It used to exist. Probably."
+      "flavor": "It used to exist. Probably.",
+      "weak_against": [
+        "typed"
+      ],
+      "strong_against": [
+        "systems"
+      ],
+      "immune_to": []
     },
     "MemoryLeech": {
       "id": "MemoryLeech",
@@ -390,7 +467,17 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "It was already there when you opened the task manager."
+      "flavor": "It was already there when you opened the task manager.",
+      "weak_against": [
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": [
+        "web",
+        "data"
+      ]
     },
     "CudaCrash": {
       "id": "CudaCrash",
@@ -427,7 +514,17 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "Your model fit in VRAM yesterday. You added one layer."
+      "flavor": "Your model fit in VRAM yesterday. You added one layer.",
+      "weak_against": [
+        "systems",
+        "data"
+      ],
+      "strong_against": [
+        "web"
+      ],
+      "immune_to": [
+        "shell"
+      ]
     },
     "InfiniteWisp": {
       "id": "InfiniteWisp",
@@ -462,7 +559,15 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "Your fan was always loud. You just never checked why."
+      "flavor": "Your fan was always loud. You just never checked why.",
+      "weak_against": [
+        "typed",
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "BoundsHound": {
       "id": "BoundsHound",
@@ -499,7 +604,15 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "It was always length minus one. You just forgot."
+      "flavor": "It was always length minus one. You just forgot.",
+      "weak_against": [
+        "systems",
+        "typed"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "BranchGhost": {
       "id": "BranchGhost",
@@ -535,7 +648,13 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "You were so sure that case was impossible."
+      "flavor": "You were so sure that case was impossible.",
+      "weak_against": [
+        "typed",
+        "dynamic"
+      ],
+      "strong_against": [],
+      "immune_to": []
     },
     "SwitchTrap": {
       "id": "SwitchTrap",
@@ -573,7 +692,14 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "You added that new enum value last week. The switch didn't notice."
+      "flavor": "You added that new enum value last week. The switch didn't notice.",
+      "weak_against": [
+        "typed"
+      ],
+      "strong_against": [
+        "shell"
+      ],
+      "immune_to": []
     },
     "RecurseWraith": {
       "id": "RecurseWraith",
@@ -609,7 +735,15 @@
           "strength_reduction": 10
         }
       ],
-      "flavor": "The base case was there. It just couldn't be reached."
+      "flavor": "The base case was there. It just couldn't be reached.",
+      "weak_against": [
+        "typed",
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "CatchAll": {
       "id": "CatchAll",
@@ -645,7 +779,14 @@
           "strength_reduction": 15
         }
       ],
-      "flavor": "If you catch everything, you learn nothing."
+      "flavor": "If you catch everything, you learn nothing.",
+      "weak_against": [
+        "typed"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
     },
     "LeakWraith": {
       "id": "LeakWraith",
@@ -690,7 +831,15 @@
           "strength_reduction": 20
         }
       ],
-      "flavor": "Rotation is not optional. Neither is the audit."
+      "flavor": "Rotation is not optional. Neither is the audit.",
+      "weak_against": [
+        "systems",
+        "shell"
+      ],
+      "strong_against": [
+        "web"
+      ],
+      "immune_to": []
     },
     "CipherNull": {
       "id": "CipherNull",
@@ -731,7 +880,18 @@
           "strength_reduction": 25
         }
       ],
-      "flavor": "MD5 was deprecated before some of your dependencies were written."
+      "flavor": "MD5 was deprecated before some of your dependencies were written.",
+      "weak_against": [
+        "systems",
+        "typed"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": [
+        "web",
+        "shell"
+      ]
     },
     "ConsentShadow": {
       "id": "ConsentShadow",
@@ -776,7 +936,15 @@
           "strength_reduction": 30
         }
       ],
-      "flavor": "Plain-language consent. Always. No pre-checked boxes."
+      "flavor": "Plain-language consent. Always. No pre-checked boxes.",
+      "weak_against": [
+        "web",
+        "typed"
+      ],
+      "strong_against": [
+        "systems"
+      ],
+      "immune_to": []
     },
     "ThrottleDemon": {
       "id": "ThrottleDemon",
@@ -816,7 +984,15 @@
           "strength_reduction": 40
         }
       ],
-      "flavor": "Exponential backoff with jitter. Every time."
+      "flavor": "Exponential backoff with jitter. Every time.",
+      "weak_against": [
+        "typed",
+        "web"
+      ],
+      "strong_against": [],
+      "immune_to": [
+        "systems"
+      ]
     },
     "PrivacyLich": {
       "id": "PrivacyLich",
@@ -845,7 +1021,17 @@
         "notification.*breach"
       ],
       "weaken_actions": [],
-      "flavor": "Some debts cannot be paid. They can only be carried responsibly."
+      "flavor": "Some debts cannot be paid. They can only be carried responsibly.",
+      "weak_against": [
+        "typed",
+        "web",
+        "data"
+      ],
+      "strong_against": [],
+      "immune_to": [
+        "systems",
+        "shell"
+      ]
     },
     "Sedamentalisk": {
       "id": "Sedamentalisk",
@@ -891,7 +1077,72 @@
           "strength_reduction": 35
         }
       ],
-      "flavor": "Knows every line of your file. Edited them all. Saved none."
+      "flavor": "Knows every line of your file. Edited them all. Saved none.",
+      "weak_against": [
+        "shell"
+      ],
+      "strong_against": [
+        "typed",
+        "dynamic"
+      ],
+      "immune_to": [
+        "web",
+        "data"
+      ]
+    },
+    "Taborel": {
+      "id": "Taborel",
+      "display": "\u21e5 Taborel",
+      "rarity": "uncommon",
+      "affinity": "indent",
+      "base_strength": 55,
+      "catchable": true,
+      "defeatable": true,
+      "xp_reward": 90,
+      "flavor": "Ancient and immovable. Eight columns wide. Will outlast your linter, your team, and your company.",
+      "error_patterns": [
+        "TabError",
+        "inconsistent use of tabs and spaces",
+        "mixed tabs and spaces",
+        "W191",
+        "E101"
+      ],
+      "weak_against": [
+        "dynamic"
+      ],
+      "strong_against": [
+        "systems"
+      ],
+      "immune_to": [],
+      "rival": "Spaciel"
+    },
+    "Spaciel": {
+      "id": "Spaciel",
+      "display": "\u00b7\u2074 Spaciel",
+      "rarity": "uncommon",
+      "affinity": "indent",
+      "base_strength": 55,
+      "catchable": true,
+      "defeatable": true,
+      "xp_reward": 90,
+      "flavor": "Precisely four. Always four. Has memorized every PEP 8 clause and will recite them unprompted.",
+      "error_patterns": [
+        "IndentationError",
+        "unexpected indent",
+        "expected an indented block",
+        "unindent does not match",
+        "W291",
+        "E111",
+        "E114"
+      ],
+      "weak_against": [
+        "systems"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": [],
+      "rival": "Taborel"
     }
   },
   "event_encounters": {
@@ -1398,7 +1649,13 @@
         "power": 60,
         "catch_rate": 0.75,
         "xp_multiplier": 1.3
-      }
+      },
+      "evolutions": [
+        {
+          "level": 200,
+          "into": "Veritarch"
+        }
+      ]
     },
     "Nullex": {
       "id": "Nullex",
@@ -1412,6 +1669,1033 @@
         "catch_rate": 0.65,
         "xp_multiplier": 1.4
       }
+    },
+    "Veritarch": {
+      "id": "Veritarch",
+      "display": "\ud83c\udfdb\ufe0f Veritarch",
+      "type": "buddymon",
+      "evolves_from": "Verifex",
+      "affinity": "Tester",
+      "description": "Makes incorrect states structurally impossible. Doesn't find bugs \u2014 it prevents entire classes of them from existing.",
+      "base_stats": {
+        "power": 85,
+        "catch_rate": 0.9,
+        "xp_multiplier": 1.7
+      },
+      "challenges": [
+        {
+          "name": "TYPE FORTRESS",
+          "description": "Eliminate all `Any` types in a file",
+          "xp": 500,
+          "difficulty": 4
+        },
+        {
+          "name": "INVARIANT PROOF",
+          "description": "Write property-based tests for a module",
+          "xp": 600,
+          "difficulty": 5
+        },
+        {
+          "name": "ZERO FLAKE",
+          "description": "Run the full test suite 3 times with no flakes",
+          "xp": 400,
+          "difficulty": 3
+        }
+      ],
+      "flavor": "The type system is the test suite."
+    },
+    "Anacondex": {
+      "id": "Anacondex",
+      "display": "\ud83d\udc0d\u2728 Anacondex",
+      "type": "language_mascot",
+      "evolves_from": "Pythia",
+      "language": "Python",
+      "element": "dynamic",
+      "description": "Pythia, fully grown. Wraps problems in abstractions before they know what happened.",
+      "base_stats": {
+        "power": 60,
+        "catch_rate": 0.55,
+        "xp_multiplier": 1.3
+      },
+      "evolutions": [
+        {
+          "level": 120,
+          "into": "Constrix"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "DECORATOR CHAIN",
+          "description": "Write 3 composable decorators",
+          "xp": 350,
+          "difficulty": 3
+        },
+        {
+          "name": "ASYNC PYTHIA",
+          "description": "Convert a sync module to fully async",
+          "xp": 400,
+          "difficulty": 3
+        }
+      ],
+      "flavor": "It already knows what you're going to type."
+    },
+    "Constrix": {
+      "id": "Constrix",
+      "display": "\ud83d\udc0d\ud83d\udc51 Constrix",
+      "type": "language_mascot",
+      "evolves_from": "Anacondex",
+      "language": "Python",
+      "element": "dynamic",
+      "description": "The final form. Python's full expressive power, fully under control.",
+      "base_stats": {
+        "power": 85,
+        "catch_rate": 0.7,
+        "xp_multiplier": 1.6
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "METACLASS MASTER",
+          "description": "Implement a metaclass that enforces an interface",
+          "xp": 700,
+          "difficulty": 5
+        },
+        {
+          "name": "PROTOCOL PURE",
+          "description": "Refactor a class hierarchy to use Protocols only",
+          "xp": 600,
+          "difficulty": 4
+        }
+      ],
+      "flavor": "It doesn't need to check the type. It already knows."
+    },
+    "Eventide": {
+      "id": "Eventide",
+      "display": "\ud83c\udf0a Eventide",
+      "type": "language_mascot",
+      "evolves_from": "Asynclet",
+      "language": "JavaScript",
+      "element": "dynamic",
+      "description": "Mastered the event loop. Treats Promises like promises.",
+      "base_stats": {
+        "power": 58,
+        "catch_rate": 0.5,
+        "xp_multiplier": 1.25
+      },
+      "evolutions": [
+        {
+          "level": 120,
+          "into": "Promisarch"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "PROMISE CHAIN",
+          "description": "Untangle a nested Promise chain into clean async/await",
+          "xp": 300,
+          "difficulty": 2
+        }
+      ],
+      "flavor": "The callback era is over. Eventide made sure of that."
+    },
+    "Promisarch": {
+      "id": "Promisarch",
+      "display": "\u221e Promisarch",
+      "type": "language_mascot",
+      "evolves_from": "Eventide",
+      "language": "JavaScript",
+      "element": "dynamic",
+      "description": "Every async operation resolves. Every edge case is handled.",
+      "base_stats": {
+        "power": 80,
+        "catch_rate": 0.65,
+        "xp_multiplier": 1.55
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "OBSERVABLE MIND",
+          "description": "Implement reactive state with no framework",
+          "xp": 600,
+          "difficulty": 5
+        }
+      ],
+      "flavor": "It never rejects. It just resolves differently."
+    },
+    "Pipewyrm": {
+      "id": "Pipewyrm",
+      "display": "\ud83d\udd17 Pipewyrm",
+      "type": "language_mascot",
+      "evolves_from": "Bashling",
+      "language": "Shell",
+      "element": "shell",
+      "description": "Lives in the pipes between commands. Feeds on stdout.",
+      "base_stats": {
+        "power": 55,
+        "catch_rate": 0.52,
+        "xp_multiplier": 1.25
+      },
+      "evolutions": [
+        {
+          "level": 120,
+          "into": "Hexecutor"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "PIPE DREAM",
+          "description": "Build a 5-stage pipeline to transform data",
+          "xp": 250,
+          "difficulty": 2
+        }
+      ],
+      "flavor": "| sort | uniq | head -1"
+    },
+    "Hexecutor": {
+      "id": "Hexecutor",
+      "display": "\ud83d\udcbb Hexecutor",
+      "type": "language_mascot",
+      "evolves_from": "Pipewyrm",
+      "language": "Shell",
+      "element": "shell",
+      "description": "Knows every flag of every Unix command. Writes shell scripts that outlive their authors.",
+      "base_stats": {
+        "power": 78,
+        "catch_rate": 0.65,
+        "xp_multiplier": 1.5
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "POSIX PURE",
+          "description": "Rewrite a bash script to work in plain sh",
+          "xp": 500,
+          "difficulty": 4
+        }
+      ],
+      "flavor": "#!/bin/sh"
+    },
+    "Concurrex": {
+      "id": "Concurrex",
+      "display": "\ud83d\udd00 Concurrex",
+      "type": "language_mascot",
+      "evolves_from": "Goroutling",
+      "language": "Go",
+      "element": "typed",
+      "description": "Orchestrates goroutines like a conductor. Nothing leaks. Nothing races.",
+      "base_stats": {
+        "power": 62,
+        "catch_rate": 0.5,
+        "xp_multiplier": 1.3
+      },
+      "evolutions": [
+        {
+          "level": 120,
+          "into": "Gorchitect"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "CONTEXT CANCEL",
+          "description": "Add context cancellation to all goroutines in a package",
+          "xp": 350,
+          "difficulty": 3
+        }
+      ],
+      "flavor": "Do not communicate by sharing memory. Share memory by communicating."
+    },
+    "Gorchitect": {
+      "id": "Gorchitect",
+      "display": "\ud83c\udfd7\ufe0f Gorchitect",
+      "type": "language_mascot",
+      "evolves_from": "Concurrex",
+      "language": "Go",
+      "element": "typed",
+      "description": "Designs systems that scale horizontally by nature. Interfaces are its grammar.",
+      "base_stats": {
+        "power": 82,
+        "catch_rate": 0.65,
+        "xp_multiplier": 1.55
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "INTERFACE ARCHITECT",
+          "description": "Redesign a package around small, composable interfaces",
+          "xp": 600,
+          "difficulty": 4
+        }
+      ],
+      "flavor": "A little copying is better than a little dependency."
+    },
+    "Schemix": {
+      "id": "Schemix",
+      "display": "\ud83d\udcd0 Schemix",
+      "type": "language_mascot",
+      "evolves_from": "Typeling",
+      "language": "TypeScript",
+      "element": "typed",
+      "description": "Validates at every boundary. Runtime and compile-time are one.",
+      "base_stats": {
+        "power": 65,
+        "catch_rate": 0.48,
+        "xp_multiplier": 1.35
+      },
+      "evolutions": [
+        {
+          "level": 130,
+          "into": "Typearch"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "BRANDED TYPES",
+          "description": "Use branded/nominal types to prevent ID confusion",
+          "xp": 400,
+          "difficulty": 4
+        }
+      ],
+      "flavor": "The schema is the source of truth."
+    },
+    "Typearch": {
+      "id": "Typearch",
+      "display": "\ud83c\udfdb\ufe0f Typearch",
+      "type": "language_mascot",
+      "evolves_from": "Schemix",
+      "language": "TypeScript",
+      "element": "typed",
+      "description": "The type system bends to its will. Discriminated unions are its mother tongue.",
+      "base_stats": {
+        "power": 85,
+        "catch_rate": 0.68,
+        "xp_multiplier": 1.6
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "PHANTOM TYPES",
+          "description": "Implement a state machine using the type system alone",
+          "xp": 800,
+          "difficulty": 5
+        }
+      ],
+      "flavor": "If it compiles, it's probably right."
+    },
+    "Componentix": {
+      "id": "Componentix",
+      "display": "\ud83d\udd37 Componentix",
+      "type": "language_mascot",
+      "evolves_from": "Vueling",
+      "language": "Vue",
+      "element": "web",
+      "description": "Every UI is a tree of well-composed components. Props down, events up.",
+      "base_stats": {
+        "power": 62,
+        "catch_rate": 0.5,
+        "xp_multiplier": 1.3
+      },
+      "evolutions": [
+        {
+          "level": 130,
+          "into": "Vitemorph"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "HEADLESS",
+          "description": "Extract a headless composable from a component",
+          "xp": 350,
+          "difficulty": 3
+        }
+      ],
+      "flavor": "The template is a contract. The composable is the logic."
+    },
+    "Vitemorph": {
+      "id": "Vitemorph",
+      "display": "\ud83d\ude80 Vitemorph",
+      "type": "language_mascot",
+      "evolves_from": "Componentix",
+      "language": "Vue",
+      "element": "web",
+      "description": "Bundles in milliseconds. Hot-reloads before you lift your fingers.",
+      "base_stats": {
+        "power": 82,
+        "catch_rate": 0.66,
+        "xp_multiplier": 1.55
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "ZERO HYDRATION",
+          "description": "Build a page with no hydration errors",
+          "xp": 600,
+          "difficulty": 4
+        }
+      ],
+      "flavor": "Cold start: 0ms."
+    },
+    "Indexer": {
+      "id": "Indexer",
+      "display": "\ud83d\udcca Indexer",
+      "type": "language_mascot",
+      "evolves_from": "Querion",
+      "language": "SQL",
+      "element": "data",
+      "description": "Knows the query plan before EXPLAIN runs. Every column earns its place.",
+      "base_stats": {
+        "power": 62,
+        "catch_rate": 0.48,
+        "xp_multiplier": 1.3
+      },
+      "evolutions": [
+        {
+          "level": 130,
+          "into": "Schemarch"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "EXPLAIN MASTER",
+          "description": "Optimize a query until EXPLAIN shows no seq scans",
+          "xp": 400,
+          "difficulty": 3
+        }
+      ],
+      "flavor": "The B-tree is already sorted."
+    },
+    "Schemarch": {
+      "id": "Schemarch",
+      "display": "\ud83c\udfdb\ufe0f Schemarch",
+      "type": "language_mascot",
+      "evolves_from": "Indexer",
+      "language": "SQL",
+      "element": "data",
+      "description": "Designs schemas that outlive their applications. Normalization is instinct.",
+      "base_stats": {
+        "power": 80,
+        "catch_rate": 0.64,
+        "xp_multiplier": 1.55
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "MIGRATE ZERO",
+          "description": "Write a migration with no downtime",
+          "xp": 700,
+          "difficulty": 5
+        }
+      ],
+      "flavor": "Third normal form is a floor, not a ceiling."
+    },
+    "Borrowkin": {
+      "id": "Borrowkin",
+      "display": "\u26d3\ufe0f Borrowkin",
+      "type": "language_mascot",
+      "evolves_from": "Ferrix",
+      "language": "Rust",
+      "element": "systems",
+      "description": "The borrow checker is not a constraint \u2014 it's a collaborator.",
+      "base_stats": {
+        "power": 82,
+        "catch_rate": 0.4,
+        "xp_multiplier": 1.5
+      },
+      "evolutions": [
+        {
+          "level": 150,
+          "into": "Lifetimer"
+        }
+      ],
+      "challenges": [
+        {
+          "name": "ARC WELDER",
+          "description": "Implement shared ownership without Mutex deadlock",
+          "xp": 600,
+          "difficulty": 5
+        }
+      ],
+      "flavor": "Ownership is clear. Lifetimes are explicit. Nothing leaks."
+    },
+    "Lifetimer": {
+      "id": "Lifetimer",
+      "display": "\u267e\ufe0f Lifetimer",
+      "type": "language_mascot",
+      "evolves_from": "Borrowkin",
+      "language": "Rust",
+      "element": "systems",
+      "description": "Understands lifetimes the way others understand variable names. Everything lives exactly as long as it should.",
+      "base_stats": {
+        "power": 95,
+        "catch_rate": 0.58,
+        "xp_multiplier": 1.8
+      },
+      "evolutions": [],
+      "challenges": [
+        {
+          "name": "UNSAFE FREE",
+          "description": "Implement a lock-free data structure in safe Rust",
+          "xp": 1000,
+          "difficulty": 5
+        }
+      ],
+      "flavor": "'static means forever. Forever is a long time."
+    }
+  },
+  "language_mascots": {
+    "Pythia": {
+      "id": "Pythia",
+      "display": "\ud83d\udc0d Pythia",
+      "type": "language_mascot",
+      "language": "Python",
+      "element": "dynamic",
+      "rarity": "common",
+      "assignable": true,
+      "base_strength": 55,
+      "xp_reward": 90,
+      "spawn": {
+        "min_affinity_level": 1,
+        "base_rate": 0.04,
+        "affinity_scale": 0.4
+      },
+      "passive_reduction_per_use": 5,
+      "description": "Ancient oracle of the dynamic tongue. Speaks in generators and comprehensions.",
+      "base_stats": {
+        "power": 40,
+        "catch_rate": 0.4,
+        "xp_multiplier": 1.15
+      },
+      "challenges": [
+        {
+          "name": "COMPREHENSION MASTER",
+          "description": "Use list/dict/set comprehension in 3 files",
+          "xp": 200,
+          "difficulty": 2
+        },
+        {
+          "name": "GENERATOR CHAIN",
+          "description": "Write a generator function",
+          "xp": 150,
+          "difficulty": 1
+        },
+        {
+          "name": "TYPE ANNOTATE",
+          "description": "Add type hints to all functions in a module",
+          "xp": 250,
+          "difficulty": 2
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 50,
+          "into": "Anacondex"
+        }
+      ],
+      "flavor": "The oracle always knew what type it was going to be.",
+      "weak_against": [
+        "typed"
+      ],
+      "strong_against": [
+        "systems"
+      ],
+      "immune_to": []
+    },
+    "Asynclet": {
+      "id": "Asynclet",
+      "display": "\u26a1 Asynclet",
+      "type": "language_mascot",
+      "language": "JavaScript",
+      "element": "dynamic",
+      "rarity": "common",
+      "assignable": true,
+      "base_strength": 50,
+      "xp_reward": 85,
+      "spawn": {
+        "min_affinity_level": 1,
+        "base_rate": 0.04,
+        "affinity_scale": 0.35
+      },
+      "passive_reduction_per_use": 5,
+      "description": "Born from the event loop. Lives between callbacks. Never blocks.",
+      "base_stats": {
+        "power": 38,
+        "catch_rate": 0.38,
+        "xp_multiplier": 1.1
+      },
+      "challenges": [
+        {
+          "name": "ASYNC ALL THE WAY",
+          "description": "Convert a callback chain to async/await",
+          "xp": 200,
+          "difficulty": 2
+        },
+        {
+          "name": "EVENT MASTER",
+          "description": "Implement an EventEmitter pattern",
+          "xp": 180,
+          "difficulty": 2
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 50,
+          "into": "Eventide"
+        }
+      ],
+      "flavor": "It'll get to it. Eventually. In the next tick.",
+      "weak_against": [
+        "typed"
+      ],
+      "strong_against": [
+        "systems"
+      ],
+      "immune_to": []
+    },
+    "Bashling": {
+      "id": "Bashling",
+      "display": "\ud83d\udcdf Bashling",
+      "type": "language_mascot",
+      "language": "Shell",
+      "element": "shell",
+      "rarity": "common",
+      "assignable": true,
+      "base_strength": 45,
+      "xp_reward": 80,
+      "spawn": {
+        "min_affinity_level": 1,
+        "base_rate": 0.05,
+        "affinity_scale": 0.3
+      },
+      "passive_reduction_per_use": 6,
+      "description": "Stitched together from pipes and redirects. Thrives in the terminal.",
+      "base_stats": {
+        "power": 35,
+        "catch_rate": 0.42,
+        "xp_multiplier": 1.1
+      },
+      "challenges": [
+        {
+          "name": "ONE-LINER",
+          "description": "Accomplish a task in a single pipeline",
+          "xp": 150,
+          "difficulty": 1
+        },
+        {
+          "name": "TRAP MASTER",
+          "description": "Write a script with proper error traps",
+          "xp": 200,
+          "difficulty": 2
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 50,
+          "into": "Pipewyrm"
+        }
+      ],
+      "flavor": "If it's not in PATH, it doesn't exist.",
+      "weak_against": [
+        "dynamic",
+        "typed"
+      ],
+      "strong_against": [],
+      "immune_to": [
+        "web"
+      ]
+    },
+    "Goroutling": {
+      "id": "Goroutling",
+      "display": "\ud83d\udc39 Goroutling",
+      "type": "language_mascot",
+      "language": "Go",
+      "element": "typed",
+      "rarity": "common",
+      "assignable": true,
+      "base_strength": 60,
+      "xp_reward": 95,
+      "spawn": {
+        "min_affinity_level": 1,
+        "base_rate": 0.035,
+        "affinity_scale": 0.4
+      },
+      "passive_reduction_per_use": 5,
+      "description": "Spawns goroutines like they're free. Respects the context. Always handles errors.",
+      "base_stats": {
+        "power": 42,
+        "catch_rate": 0.38,
+        "xp_multiplier": 1.15
+      },
+      "challenges": [
+        {
+          "name": "CHANNEL SURFER",
+          "description": "Implement a concurrent pipeline with channels",
+          "xp": 250,
+          "difficulty": 3
+        },
+        {
+          "name": "ERROR HANDLER",
+          "description": "Eliminate all ignored error returns",
+          "xp": 200,
+          "difficulty": 2
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 50,
+          "into": "Concurrex"
+        }
+      ],
+      "flavor": "The gopher never panics. It returns an error.",
+      "weak_against": [
+        "shell"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
+    },
+    "Typeling": {
+      "id": "Typeling",
+      "display": "\ud83d\udd37 Typeling",
+      "type": "language_mascot",
+      "language": "TypeScript",
+      "element": "typed",
+      "rarity": "uncommon",
+      "assignable": true,
+      "base_strength": 65,
+      "xp_reward": 110,
+      "spawn": {
+        "min_affinity_level": 2,
+        "base_rate": 0.025,
+        "affinity_scale": 0.45
+      },
+      "passive_reduction_per_use": 4,
+      "description": "JavaScript that learned to say no. Carries a schema everywhere it goes.",
+      "base_stats": {
+        "power": 48,
+        "catch_rate": 0.35,
+        "xp_multiplier": 1.2
+      },
+      "challenges": [
+        {
+          "name": "NO ANY",
+          "description": "Remove all `any` types from a file",
+          "xp": 300,
+          "difficulty": 3
+        },
+        {
+          "name": "SCHEMA WARDEN",
+          "description": "Add Zod/io-ts validation to an API boundary",
+          "xp": 350,
+          "difficulty": 3
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 60,
+          "into": "Schemix"
+        }
+      ],
+      "flavor": "It used to be JavaScript. It got better.",
+      "weak_against": [
+        "shell"
+      ],
+      "strong_against": [
+        "dynamic"
+      ],
+      "immune_to": []
+    },
+    "Vueling": {
+      "id": "Vueling",
+      "display": "\ud83d\udc9a Vueling",
+      "type": "language_mascot",
+      "language": "Vue",
+      "element": "web",
+      "rarity": "uncommon",
+      "assignable": true,
+      "base_strength": 60,
+      "xp_reward": 105,
+      "spawn": {
+        "min_affinity_level": 2,
+        "base_rate": 0.03,
+        "affinity_scale": 0.4
+      },
+      "passive_reduction_per_use": 4,
+      "description": "Component-first, reactive-always. Keeps the DOM in perfect harmony.",
+      "base_stats": {
+        "power": 45,
+        "catch_rate": 0.36,
+        "xp_multiplier": 1.18
+      },
+      "challenges": [
+        {
+          "name": "COMPOSABLE CRAFT",
+          "description": "Extract logic into a reusable composable",
+          "xp": 280,
+          "difficulty": 2
+        },
+        {
+          "name": "REACTIVE CHAIN",
+          "description": "Build a computed chain with no side effects",
+          "xp": 250,
+          "difficulty": 2
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 60,
+          "into": "Componentix"
+        }
+      ],
+      "flavor": "The template always re-renders. The composable never changes.",
+      "weak_against": [
+        "systems"
+      ],
+      "strong_against": [
+        "data"
+      ],
+      "immune_to": []
+    },
+    "Querion": {
+      "id": "Querion",
+      "display": "\ud83d\uddc4\ufe0f Querion",
+      "type": "language_mascot",
+      "language": "SQL",
+      "element": "data",
+      "rarity": "uncommon",
+      "assignable": true,
+      "base_strength": 65,
+      "xp_reward": 110,
+      "spawn": {
+        "min_affinity_level": 1,
+        "base_rate": 0.03,
+        "affinity_scale": 0.4
+      },
+      "passive_reduction_per_use": 4,
+      "description": "Ancient and relational. Knows where every join leads.",
+      "base_stats": {
+        "power": 44,
+        "catch_rate": 0.34,
+        "xp_multiplier": 1.2
+      },
+      "challenges": [
+        {
+          "name": "INDEX WHISPERER",
+          "description": "Add an index that speeds up a slow query",
+          "xp": 300,
+          "difficulty": 3
+        },
+        {
+          "name": "N+1 SLAYER",
+          "description": "Eliminate an N+1 query pattern",
+          "xp": 350,
+          "difficulty": 3
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 60,
+          "into": "Indexer"
+        }
+      ],
+      "flavor": "The schema was designed in 1999. It's still running.",
+      "weak_against": [
+        "web"
+      ],
+      "strong_against": [
+        "shell"
+      ],
+      "immune_to": []
+    },
+    "Ferrix": {
+      "id": "Ferrix",
+      "display": "\ud83e\udd80 Ferrix",
+      "type": "language_mascot",
+      "language": "Rust",
+      "element": "systems",
+      "rarity": "rare",
+      "assignable": true,
+      "base_strength": 80,
+      "xp_reward": 160,
+      "spawn": {
+        "min_affinity_level": 2,
+        "base_rate": 0.015,
+        "affinity_scale": 0.5
+      },
+      "passive_reduction_per_use": 3,
+      "description": "The borrow checker incarnate. No data race has ever escaped its claws.",
+      "base_stats": {
+        "power": 65,
+        "catch_rate": 0.28,
+        "xp_multiplier": 1.35
+      },
+      "challenges": [
+        {
+          "name": "LIFETIME MASTER",
+          "description": "Resolve a lifetime error without cloning",
+          "xp": 500,
+          "difficulty": 5
+        },
+        {
+          "name": "ZERO UNSAFE",
+          "description": "Write a systems module with no unsafe blocks",
+          "xp": 450,
+          "difficulty": 4
+        }
+      ],
+      "evolutions": [
+        {
+          "level": 75,
+          "into": "Borrowkin"
+        }
+      ],
+      "flavor": "Memory safety isn't a feature. It's a guarantee.",
+      "weak_against": [
+        "dynamic"
+      ],
+      "strong_against": [
+        "web",
+        "shell"
+      ],
+      "immune_to": []
+    },
+    "Perlius": {
+      "id": "Perlius",
+      "display": "\ud83d\udc2a Perlius",
+      "type": "language_mascot",
+      "language": "Perl",
+      "element": "dynamic",
+      "rarity": "legendary",
+      "assignable": true,
+      "base_strength": 90,
+      "xp_reward": 300,
+      "spawn": {
+        "min_affinity_level": 3,
+        "base_rate": 0.005,
+        "affinity_scale": 0.6
+      },
+      "passive_reduction_per_use": 2,
+      "description": "Older than the web. Survived every 'Perl is dead' headline. Still writing regexes.",
+      "base_stats": {
+        "power": 80,
+        "catch_rate": 0.18,
+        "xp_multiplier": 1.6
+      },
+      "challenges": [
+        {
+          "name": "REGEX ARTISAN",
+          "description": "Write a one-liner that would make Larry Wall proud",
+          "xp": 800,
+          "difficulty": 5
+        },
+        {
+          "name": "CPAN PILGRIM",
+          "description": "Port a CPAN module concept to a modern language",
+          "xp": 600,
+          "difficulty": 4
+        }
+      ],
+      "evolutions": [],
+      "flavor": "There is more than one way to do it. Perlius knows all of them.",
+      "weak_against": [
+        "typed",
+        "shell"
+      ],
+      "strong_against": [],
+      "immune_to": [
+        "systems"
+      ]
+    },
+    "Cobolithon": {
+      "id": "Cobolithon",
+      "display": "\ud83c\udffa Cobolithon",
+      "type": "language_mascot",
+      "language": "COBOL",
+      "element": "data",
+      "rarity": "legendary",
+      "assignable": true,
+      "base_strength": 95,
+      "xp_reward": 400,
+      "spawn": {
+        "min_affinity_level": 3,
+        "base_rate": 0.003,
+        "affinity_scale": 0.7
+      },
+      "passive_reduction_per_use": 2,
+      "description": "Runs 95% of the world's financial transactions. Has never been refactored.",
+      "base_stats": {
+        "power": 90,
+        "catch_rate": 0.12,
+        "xp_multiplier": 1.8
+      },
+      "challenges": [
+        {
+          "name": "MAINFRAME WHISPERER",
+          "description": "Document a COBOL section so a modern dev can read it",
+          "xp": 1000,
+          "difficulty": 5
+        },
+        {
+          "name": "LEGACY BRIDGE",
+          "description": "Write an API wrapper around a COBOL-style data format",
+          "xp": 800,
+          "difficulty": 5
+        }
+      ],
+      "evolutions": [],
+      "flavor": "Born in 1959. Still processing payroll.",
+      "weak_against": [
+        "web"
+      ],
+      "strong_against": [],
+      "immune_to": [
+        "dynamic",
+        "shell"
+      ]
+    },
+    "Lispling": {
+      "id": "Lispling",
+      "display": "\ud83c\udf00 Lispling",
+      "type": "language_mascot",
+      "language": "LISP",
+      "element": "dynamic",
+      "rarity": "legendary",
+      "assignable": true,
+      "base_strength": 88,
+      "xp_reward": 350,
+      "spawn": {
+        "min_affinity_level": 3,
+        "base_rate": 0.004,
+        "affinity_scale": 0.65
+      },
+      "passive_reduction_per_use": 2,
+      "description": "All code is data. All data is code. All parentheses are load-bearing.",
+      "base_stats": {
+        "power": 85,
+        "catch_rate": 0.15,
+        "xp_multiplier": 1.75
+      },
+      "challenges": [
+        {
+          "name": "MACRO ARCHITECT",
+          "description": "Write a macro that generates code at compile time",
+          "xp": 900,
+          "difficulty": 5
+        },
+        {
+          "name": "HOMOICONIC",
+          "description": "Implement an interpreter for a mini-language",
+          "xp": 1000,
+          "difficulty": 5
+        }
+      ],
+      "evolutions": [],
+      "flavor": "((((((it's parentheses all the way down))))))",
+      "weak_against": [
+        "typed",
+        "systems"
+      ],
+      "strong_against": [],
+      "immune_to": []
     }
   }
 }
