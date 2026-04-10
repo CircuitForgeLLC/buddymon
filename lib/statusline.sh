@@ -15,7 +15,15 @@ ID=$(jq -r '.buddymon_id // ""' "$B/active.json" 2>/dev/null)
 [[ -n "$ID" ]] || exit 0
 
 LVL=$(jq -r ".owned[\"$ID\"].level // 1" "$B/roster.json" 2>/dev/null)
-XP=$(jq -r '.session_xp // 0' "$B/active.json" 2>/dev/null)
+
+# Per-session XP (accurate for multi-window setups); fall back to active.json
+PGRP=$(python3 -c "import os; print(os.getpgrp())" 2>/dev/null)
+SESSION_FILE="$B/sessions/${PGRP}.json"
+if [[ -f "$SESSION_FILE" ]]; then
+    XP=$(jq -r '.session_xp // 0' "$SESSION_FILE" 2>/dev/null)
+else
+    XP=$(jq -r '.session_xp // 0' "$B/active.json" 2>/dev/null)
+fi
 
 ENC_JSON=$(jq -c '.active_encounter // null' "$B/encounters.json" 2>/dev/null)
 ENC_DISPLAY=$(echo "$ENC_JSON" | jq -r '.display // ""' 2>/dev/null)

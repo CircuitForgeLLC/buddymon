@@ -88,48 +88,89 @@ def main():
     else:
         catalog = load_json(CATALOG_FILE)
 
-    monster = catalog.get("bug_monsters", {}).get(enc.get("id", ""), {})
-    rarity = monster.get("rarity", "common")
     rarity_stars = {
         "very_common": "★☆☆☆☆", "common": "★★☆☆☆",
         "uncommon": "★★★☆☆", "rare": "★★★★☆", "legendary": "★★★★★",
     }
-    stars = rarity_stars.get(rarity, "★★☆☆☆")
     strength = enc.get("current_strength", 50)
-    defeatable = enc.get("defeatable", True)
-    catchable = enc.get("catchable", True)
-    flavor = monster.get("flavor", "")
+    is_mascot = enc.get("encounter_type") == "language_mascot"
 
-    if enc.get("wounded"):
-        # Wounded re-announcement — urgent, catch-or-lose framing
-        lines = [
-            f"\n🩹 **{enc['display']} is wounded and fleeing!**",
-            f"   Strength: {strength}%  ·  This is your last chance to catch it.",
-            "",
-            f"   **{buddy_display}** is ready — move fast!",
-            "",
-            "   `[CATCH]` → `/buddymon catch`  (near-guaranteed at 5% strength)",
-            "   `[IGNORE]` → it flees on the next clean run",
-        ]
+    if is_mascot:
+        mascot_data = catalog.get("language_mascots", {}).get(enc.get("id", ""), {})
+        rarity = mascot_data.get("rarity", "common")
+        stars = rarity_stars.get(rarity, "★★☆☆☆")
+        flavor = mascot_data.get("flavor", "")
+        lang = enc.get("language") or mascot_data.get("language", "")
+        assignable = mascot_data.get("assignable", False)
+
+        if enc.get("wounded"):
+            lines = [
+                f"\n🩹 **{enc['display']} is weakened and retreating!**",
+                f"   Strength: {strength}%  ·  Your {lang} work has worn it down.",
+                "",
+                f"   **{buddy_display}** senses the opportunity — act now!",
+                "",
+                "   `[CATCH]` → `/buddymon catch`  (near-guaranteed at 5% strength)",
+                "   `[IGNORE]` → it fades on your next edit",
+            ]
+        else:
+            lines = [
+                f"\n🦎 **{enc['display']} appeared!**  [language mascot · {rarity}]",
+                f"   Language: {lang}  ·  Strength: {strength}%  ·  Rarity: {stars}",
+            ]
+            if flavor:
+                lines.append(f"   *{flavor}*")
+            if assignable:
+                lines.append(f"   ✓ Catchable and assignable as buddy — has its own challenges.")
+            lines += [
+                "",
+                f"   **{buddy_display}** is intrigued!",
+                "",
+                f"   `[CATCH]` Code more in {lang} to weaken it → `/buddymon catch`",
+                "   `[FLEE]`  Ignore → it retreats as your affinity fades",
+            ]
     else:
-        # Normal first appearance
-        catchable_str = "[catchable · catch only]" if not defeatable else f"[{rarity} · {'catchable' if catchable else ''}]"
-        lines = [
-            f"\n💀 **{enc['display']} appeared!**  {catchable_str}",
-            f"   Strength: {strength}%  ·  Rarity: {stars}",
-        ]
-        if flavor:
-            lines.append(f"   *{flavor}*")
-        if not defeatable:
-            lines.append("   ⚠️  CANNOT BE DEFEATED — catch only")
-        lines += [
-            "",
-            f"   **{buddy_display}** is ready to battle!",
-            "",
-            "   `[FIGHT]` Fix the bug → `/buddymon fight` to claim XP",
-            "   `[CATCH]` Weaken first (test/repro/comment) → `/buddymon catch`",
-            "   `[FLEE]`  Ignore → monster grows stronger",
-        ]
+        monster = catalog.get("bug_monsters", {}).get(enc.get("id", ""), {})
+        rarity = monster.get("rarity", "common")
+        stars = rarity_stars.get(rarity, "★★☆☆☆")
+        defeatable = enc.get("defeatable", True)
+        catchable = enc.get("catchable", True)
+        flavor = monster.get("flavor", "")
+
+        if enc.get("wounded"):
+            lines = [
+                f"\n🩹 **{enc['display']} is wounded and fleeing!**",
+                f"   Strength: {strength}%  ·  This is your last chance to catch it.",
+                "",
+                f"   **{buddy_display}** is ready — move fast!",
+                "",
+                "   `[CATCH]` → `/buddymon catch`  (near-guaranteed at 5% strength)",
+                "   `[IGNORE]` → it flees on the next clean run",
+            ]
+        else:
+            catchable_str = "[catchable · catch only]" if not defeatable else f"[{rarity} · {'catchable' if catchable else ''}]"
+            lines = [
+                f"\n💀 **{enc['display']} appeared!**  {catchable_str}",
+                f"   Strength: {strength}%  ·  Rarity: {stars}",
+            ]
+            if flavor:
+                lines.append(f"   *{flavor}*")
+            rival_id = enc.get("rival") or monster.get("rival")
+            if rival_id:
+                rival_entry = (catalog.get("bug_monsters", {}).get(rival_id)
+                               or catalog.get("event_encounters", {}).get(rival_id, {}))
+                rival_display = rival_entry.get("display", rival_id)
+                lines.append(f"   ⚔️  Eternal rival of **{rival_display}** — catch both to settle the debate.")
+            if not defeatable:
+                lines.append("   ⚠️  CANNOT BE DEFEATED — catch only")
+            lines += [
+                "",
+                f"   **{buddy_display}** is ready to battle!",
+                "",
+                "   `[FIGHT]` Fix the bug → `/buddymon fight` to claim XP",
+                "   `[CATCH]` Weaken first (test/repro/comment) → `/buddymon catch`",
+                "   `[FLEE]`  Ignore → monster grows stronger",
+            ]
 
     msg = "\n".join(lines)
     print(json.dumps({

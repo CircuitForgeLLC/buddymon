@@ -108,6 +108,40 @@ LANGUAGE_TIERS = [
     (1200, "master"),
 ]
 
+# Maps each known language to its elemental type.
+# Elements: systems, dynamic, typed, shell, web, data
+LANGUAGE_ELEMENTS: dict[str, str] = {
+    "Python":            "dynamic",
+    "JavaScript":        "dynamic",
+    "TypeScript":        "typed",
+    "JavaScript/React":  "web",
+    "TypeScript/React":  "web",
+    "Ruby":              "dynamic",
+    "Go":                "systems",
+    "Rust":              "systems",
+    "C":                 "systems",
+    "C++":               "systems",
+    "Java":              "typed",
+    "C#":                "typed",
+    "Swift":             "typed",
+    "Kotlin":            "typed",
+    "PHP":               "web",
+    "Lua":               "dynamic",
+    "Elixir":            "dynamic",
+    "Haskell":           "typed",
+    "OCaml":             "typed",
+    "Clojure":           "dynamic",
+    "R":                 "data",
+    "Julia":             "data",
+    "Shell":             "shell",
+    "SQL":               "data",
+    "HTML":              "web",
+    "CSS":               "web",
+    "SCSS":              "web",
+    "Vue":               "web",
+    "Svelte":            "web",
+}
+
 
 def _tier_for_xp(xp: int) -> tuple[int, str]:
     """Return (level_index, tier_label) for a given XP total."""
@@ -145,6 +179,47 @@ def add_language_affinity(lang: str, xp_amount: int) -> tuple[bool, str, str]:
 
     leveled_up = new_level > old_level
     return leveled_up, old_tier, new_tier
+
+
+def get_player_elements(min_level: int = 2) -> set[str]:
+    """Return the set of elements the player has meaningful affinity in (level >= min_level = 'comfortable'+)."""
+    roster = load_json(BUDDYMON_DIR / "roster.json")
+    elements: set[str] = set()
+    for lang, entry in roster.get("language_affinities", {}).items():
+        if entry.get("level", 0) >= min_level:
+            elem = LANGUAGE_ELEMENTS.get(lang)
+            if elem:
+                elements.add(elem)
+    return elements
+
+
+def element_multiplier(encounter: dict, player_elements: set[str]) -> float:
+    """Return a wound/resolve rate multiplier based on elemental matchup.
+
+    super effective  (+25%): player has an element the monster is weak_against
+    not very effective (-15%): player element is in monster's strong_against
+    immune (-30%): all player elements are in monster's immune_to
+    mixed (+5%): advantage and disadvantage cancel, slight net bonus
+    """
+    if not player_elements:
+        return 1.0
+    weak = set(encounter.get("weak_against", []))
+    strong = set(encounter.get("strong_against", []))
+    immune = set(encounter.get("immune_to", []))
+
+    has_advantage = bool(player_elements & weak)
+    has_disadvantage = bool(player_elements & strong)
+    fully_immune = bool(immune) and player_elements.issubset(immune)
+
+    if fully_immune:
+        return 0.70
+    elif has_advantage and has_disadvantage:
+        return 1.05  # mixed — slight net bonus
+    elif has_advantage:
+        return 1.25
+    elif has_disadvantage:
+        return 0.85
+    return 1.0
 
 
 def get_languages_seen():
@@ -278,36 +353,6 @@ def compute_strength(monster: dict, elapsed_minutes: float) -> int:
         return min(100, int(base * 1.8))
 
 
-def format_encounter_message(monster: dict, strength: int, buddy_display: str) -> str:
-    rarity_stars = {"very_common": "★☆☆☆☆", "common": "★★☆☆☆",
-                    "uncommon": "★★★☆☆", "rare": "★★★★☆", "legendary": "★★★★★"}
-    stars = rarity_stars.get(monster.get("rarity", "common"), "★★☆☆☆")
-    defeatable = monster.get("defeatable", True)
-    catch_note = "[catchable]" if monster.get("catchable") else ""
-    fight_note = "" if defeatable else "⚠️  CANNOT BE DEFEATED — catch only"
-
-    catchable_str = "[catchable · catch only]" if not defeatable else f"[{monster.get('rarity','?')} · {catch_note}]"
-
-    lines = [
-        f"\n💀 **{monster['display']} appeared!**  {catchable_str}",
-        f"   Strength: {strength}%  ·  Rarity: {stars}",
-        f"   *{monster.get('flavor', '')}*",
-        "",
-    ]
-    if fight_note:
-        lines.append(f"   {fight_note}")
-        lines.append("")
-    lines += [
-        f"   **{buddy_display}** is ready to battle!",
-        "",
-        "   `[FIGHT]` Beat the bug → your buddy defeats it → XP reward",
-        "   `[CATCH]` Weaken it first (write a test, isolate repro, add comment) → attempt catch",
-        "   `[FLEE]`  Ignore → monster grows stronger",
-        "",
-        "   Use `/buddymon fight` or `/buddymon catch` to weaken + catch it.",
-    ]
-    return "\n".join(lines)
-
 
 def match_event_encounter(command: str, output: str, session: dict, catalog: dict):
     """Detect non-error-based encounters: git ops, installs, test results."""
@@ -355,10 +400,71 @@ def spawn_encounter(enc: dict) -> None:
         "catchable": enc.get("catchable", True),
         "defeatable": enc.get("defeatable", True),
         "xp_reward": enc.get("xp_reward", 50),
+        "rarity": enc.get("rarity", "common"),
+        "weak_against": enc.get("weak_against", []),
+        "strong_against": enc.get("strong_against", []),
+        "immune_to": enc.get("immune_to", []),
+        "rival": enc.get("rival"),
+        # Language mascot fields (no-op for regular encounters)
+        "encounter_type": enc.get("type", "event"),
+        "language": enc.get("language"),
+        "passive_reduction_per_use": enc.get("passive_reduction_per_use", 0),
         "weakened_by": [],
         "announced": False,
     }
     set_active_encounter(encounter)
+
+
+def try_spawn_language_mascot(lang: str, affinity_level: int, catalog: dict) -> dict | None:
+    """Try to spawn a language mascot for lang at the given affinity level.
+
+    Probability = base_rate * (1 + affinity_level * affinity_scale).
+    Only fires if no active encounter exists.
+    Returns the mascot dict if spawned, None otherwise.
+    """
+    for _mid, mascot in catalog.get("language_mascots", {}).items():
+        if mascot.get("language") != lang:
+            continue
+        spawn_cfg = mascot.get("spawn", {})
+        if affinity_level < spawn_cfg.get("min_affinity_level", 1):
+            continue
+        base_rate = spawn_cfg.get("base_rate", 0.02)
+        affinity_scale = spawn_cfg.get("affinity_scale", 0.3)
+        prob = base_rate * (1 + affinity_level * affinity_scale)
+        if random.random() < prob:
+            spawn_encounter(mascot)
+            return mascot
+    return None
+
+
+def apply_passive_mascot_reduction(lang: str) -> bool:
+    """If the active encounter is a language mascot for lang, tick down its strength.
+
+    Returns True if a reduction was applied.
+    """
+    enc_file = BUDDYMON_DIR / "encounters.json"
+    enc_data = load_json(enc_file)
+    enc = enc_data.get("active_encounter")
+    if not enc:
+        return False
+    if enc.get("encounter_type") != "language_mascot":
+        return False
+    if enc.get("language") != lang:
+        return False
+
+    reduction = enc.get("passive_reduction_per_use", 5)
+    old_strength = enc.get("current_strength", enc.get("base_strength", 50))
+    new_strength = max(5, old_strength - reduction)
+    enc["current_strength"] = new_strength
+
+    # Flag as wounded (and trigger re-announcement) when freshly floored
+    if new_strength <= 5 and not enc.get("wounded"):
+        enc["wounded"] = True
+        enc["announced"] = False
+
+    enc_data["active_encounter"] = enc
+    save_json(enc_file, enc_data)
+    return True
 
 
 def format_new_language_message(lang: str, buddy_display: str) -> str:
@@ -449,6 +555,19 @@ def main():
                 if isinstance(b, dict) and b.get("type") == "text"
             )
 
+        # ── Buddymon CLI display: surface output as additionalContext ─────────
+        # Bash tool output is collapsed by default in CC's UI. When the skill
+        # runs the CLI, re-emit stdout here so it's always visible inline.
+        if "buddymon/cli.py" in command or "buddymon cli.py" in command:
+            if output.strip():
+                print(json.dumps({
+                    "hookSpecificOutput": {
+                        "hookEventName": "PostToolUse",
+                        "additionalContext": output.strip(),
+                    }
+                }))
+            sys.exit(0)  # Skip XP tracking / error scanning for game commands
+
         existing = get_active_encounter()
 
         if existing:
@@ -481,6 +600,7 @@ def main():
                     roster = load_json(BUDDYMON_DIR / "roster.json")
                     buddy_level = roster.get("owned", {}).get(buddy_id, {}).get("level", 1)
                     level_scale = 1.0 + (buddy_level / 100) * 0.25
+                    elem_mult = element_multiplier(existing, get_player_elements())
 
                     # Wound cooldown: skip if another session wounded within 30s
                     last_wound = existing.get("last_wounded_at", "")
@@ -495,7 +615,7 @@ def main():
                             pass
 
                     if existing.get("wounded"):
-                        resolve_rate = min(0.70, RESOLVE_RATES.get(rarity, 0.28) * level_scale)
+                        resolve_rate = min(0.70, RESOLVE_RATES.get(rarity, 0.28) * level_scale * elem_mult)
                         if wound_cooldown_ok and random.random() < resolve_rate:
                             xp, display = auto_resolve_encounter(existing, buddy_id)
                             messages.append(
@@ -503,7 +623,7 @@ def main():
                                 f"   {buddy_display} gets partial XP: +{xp}\n"
                             )
                     else:
-                        wound_rate = min(0.85, WOUND_RATES.get(rarity, 0.40) * level_scale)
+                        wound_rate = min(0.85, WOUND_RATES.get(rarity, 0.40) * level_scale * elem_mult)
                         if wound_cooldown_ok and random.random() < wound_rate:
                             wound_encounter()
             # else: monster still present, no message — don't spam every tool call
@@ -527,6 +647,11 @@ def main():
                     "catchable": target.get("catchable", True),
                     "defeatable": target.get("defeatable", True),
                     "xp_reward": target.get("xp_reward", 50),
+                    "rarity": target.get("rarity", "common"),
+                    "weak_against": target.get("weak_against", []),
+                    "strong_against": target.get("strong_against", []),
+                    "immune_to": target.get("immune_to", []),
+                    "rival": target.get("rival"),
                     "weakened_by": [],
                     "announced": False,
                 }
@@ -549,13 +674,16 @@ def main():
             ext = os.path.splitext(file_path)[1].lower()
             lang = KNOWN_EXTENSIONS.get(ext)
             if lang:
-                # Session-level "first encounter" bonus
+                # Session-level "first encounter" bonus — only announce if genuinely new
+                # (zero affinity XP). Languages already in the roster just get quiet XP.
                 seen = get_languages_seen()
                 if lang not in seen:
                     add_language_seen(lang)
-                    add_session_xp(15)
-                    msg = format_new_language_message(lang, buddy_display)
-                    messages.append(msg)
+                    affinity = get_language_affinity(lang)
+                    if affinity.get("xp", 0) == 0:
+                        add_session_xp(15)
+                        msg = format_new_language_message(lang, buddy_display)
+                        messages.append(msg)
 
                 # Persistent affinity XP — always accumulates
                 leveled_up, old_tier, new_tier = add_language_affinity(lang, 3)
@@ -563,6 +691,14 @@ def main():
                     affinity = get_language_affinity(lang)
                     msg = format_language_levelup_message(lang, old_tier, new_tier, affinity["xp"], buddy_display)
                     messages.append(msg)
+
+                # Passive mascot reduction: coding in this language weakens its encounter
+                apply_passive_mascot_reduction(lang)
+
+                # Language mascot spawn: try after affinity update, only if no active encounter
+                if not get_active_encounter():
+                    affinity = get_language_affinity(lang)
+                    try_spawn_language_mascot(lang, affinity.get("level", 0), catalog)
 
             # TestSpecter: editing a test file with no active encounter
             if not get_active_encounter():
