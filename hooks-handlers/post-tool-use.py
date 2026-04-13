@@ -20,9 +20,31 @@ import random
 from pathlib import Path
 from datetime import datetime
 
-PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT", str(Path(__file__).parent.parent))
 BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
-CATALOG_FILE = Path(PLUGIN_ROOT) / "lib" / "catalog.json"
+
+
+def find_catalog() -> dict:
+    """Load catalog from the first candidate path that exists.
+
+    Checks the user-local copy installed by install.sh first, so the
+    current catalog is always used regardless of which plugin cache version
+    CLAUDE_PLUGIN_ROOT points to.
+    """
+    plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT", str(Path(__file__).parent.parent))
+    candidates = [
+        # User-local copy: always matches the live dev/install version
+        BUDDYMON_DIR / "catalog.json",
+        Path(plugin_root) / "lib" / "catalog.json",
+        Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.1/lib/catalog.json",
+        Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/catalog.json",
+    ]
+    for p in candidates:
+        if p and p.exists():
+            try:
+                return json.loads(p.read_text())
+            except Exception:
+                continue
+    return {}
 
 # Each CC session gets its own state file keyed by process group ID.
 # All hooks within one session share the same PGRP, giving stable per-session state.
@@ -531,7 +553,7 @@ def main():
         BUDDYMON_DIR.mkdir(parents=True, exist_ok=True)
         sys.exit(0)
 
-    catalog = load_json(CATALOG_FILE)
+    catalog = find_catalog()
     buddy_id = get_active_buddy_id()
 
     # Look up display name
@@ -663,27 +685,37 @@ def main():
             target = monster or event
 
             if target and random.random() < 0.70:
-                if monster:
-                    strength = compute_strength(monster, elapsed_minutes=0)
+                # Skip spawn if this monster is already in the collection —
+                # no point announcing something the player already caught.
+                target_id = target.get("id", "")
+                _owned = load_json(BUDDYMON_DIR / "roster.json").get("owned", {})
+                already_owned = (target_id in _owned
+                                 and _owned[target_id].get("type")
+                                 in ("caught_bug_monster", "caught_language_mascot"))
+                if already_owned:
+                    pass  # silently skip
                 else:
-                    strength = target.get("base_strength", 30)
-                encounter = {
-                    "id": target["id"],
-                    "display": target["display"],
-                    "base_strength": target.get("base_strength", 50),
-                    "current_strength": strength,
-                    "catchable": target.get("catchable", True),
-                    "defeatable": target.get("defeatable", True),
-                    "xp_reward": target.get("xp_reward", 50),
-                    "rarity": target.get("rarity", "common"),
-                    "weak_against": target.get("weak_against", []),
-                    "strong_against": target.get("strong_against", []),
-                    "immune_to": target.get("immune_to", []),
-                    "rival": target.get("rival"),
-                    "weakened_by": [],
-                    "announced": False,
-                }
-                set_active_encounter(encounter)
+                    if monster:
+                        strength = compute_strength(monster, elapsed_minutes=0)
+                    else:
+                        strength = target.get("base_strength", 30)
+                    encounter = {
+                        "id": target["id"],
+                        "display": target["display"],
+                        "base_strength": target.get("base_strength", 50),
+                        "current_strength": strength,
+                        "catchable": target.get("catchable", True),
+                        "defeatable": target.get("defeatable", True),
+                        "xp_reward": target.get("xp_reward", 50),
+                        "rarity": target.get("rarity", "common"),
+                        "weak_against": target.get("weak_against", []),
+                        "strong_against": target.get("strong_against", []),
+                        "immune_to": target.get("immune_to", []),
+                        "rival": target.get("rival"),
+                        "weakened_by": [],
+                        "announced": False,
+                    }
+                    set_active_encounter(encounter)
 
         # Commit detection
         if "git commit" in command and "exit_code" not in str(tool_response):
