@@ -33,14 +33,13 @@ SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
 def get_session_state() -> dict:
     """Read the current session's state file, falling back to global active.json."""
     session = load_json(SESSION_FILE)
-    if not session:
-        # No session file yet — inherit from global default
+    # Fall back when file is missing OR when buddymon_id is null (e.g. pgrp mismatch
+    # between the CLI process that ran evolve/assign and this hook process).
+    if not session.get("buddymon_id"):
         global_active = load_json(BUDDYMON_DIR / "active.json")
-        session = {
-            "buddymon_id": global_active.get("buddymon_id"),
-            "challenge": global_active.get("challenge"),
-            "session_xp": 0,
-        }
+        session["buddymon_id"] = global_active.get("buddymon_id")
+        session.setdefault("challenge", global_active.get("challenge"))
+        session.setdefault("session_xp", 0)
     return session
 
 
@@ -250,7 +249,18 @@ def is_starter_chosen():
 
 
 def get_active_buddy_id():
-    return get_session_state().get("buddymon_id")
+    """Return the active buddy ID, skipping any caught monster that slipped in."""
+    bid = get_session_state().get("buddymon_id")
+    if not bid:
+        return None
+    # Validate: caught bug/mascot types are trophies, not assignable buddies.
+    # If one ended up in state (e.g. from a state corruption), fall back to active.json.
+    roster = load_json(BUDDYMON_DIR / "roster.json")
+    mon_type = roster.get("owned", {}).get(bid, {}).get("type", "")
+    if mon_type in ("caught_bug_monster",):
+        fallback = load_json(BUDDYMON_DIR / "active.json")
+        bid = fallback.get("buddymon_id", bid)
+    return bid
 
 
 def get_active_encounter():
@@ -571,6 +581,24 @@ def main():
         existing = get_active_encounter()
 
         if existing:
+            # Already-owned shortcut: dismiss immediately, no XP, no wound cycle.
+            # No point fighting something already in the collection.
+            enc_id = existing.get("id", "")
+            roster_quick = load_json(BUDDYMON_DIR / "roster.json")
+            owned_quick = roster_quick.get("owned", {})
+            if (enc_id in owned_quick
+                    and owned_quick[enc_id].get("type") in ("caught_bug_monster", "caught_language_mascot")
+                    and not existing.get("catch_pending")):
+                enc_data = load_json(BUDDYMON_DIR / "encounters.json")
+                enc_data.setdefault("history", []).append({**existing, "outcome": "dismissed_owned"})
+                enc_data["active_encounter"] = None
+                save_json(BUDDYMON_DIR / "encounters.json", enc_data)
+                messages.append(
+                    f"\n🔁 **{existing.get('display', enc_id)}** — already in your collection. Dismissed."
+                )
+                existing = None  # skip further processing this run
+
+        if existing:
             # On a clean Bash run (monster patterns gone), respect catch_pending,
             # wound a healthy monster, or auto-resolve a wounded one.
             # Probability gates prevent back-to-back Bash runs from instantly
@@ -674,16 +702,14 @@ def main():
             ext = os.path.splitext(file_path)[1].lower()
             lang = KNOWN_EXTENSIONS.get(ext)
             if lang:
-                # Session-level "first encounter" bonus — only announce if genuinely new
-                # (zero affinity XP). Languages already in the roster just get quiet XP.
-                seen = get_languages_seen()
-                if lang not in seen:
-                    add_language_seen(lang)
-                    affinity = get_language_affinity(lang)
-                    if affinity.get("xp", 0) == 0:
-                        add_session_xp(15)
-                        msg = format_new_language_message(lang, buddy_display)
-                        messages.append(msg)
+                # Fire "new language" bonus only when affinity XP is genuinely zero.
+                # Affinity XP in roster.json is the reliable persistent signal;
+                # session.json languages_seen was volatile and caused false positives.
+                affinity = get_language_affinity(lang)
+                if affinity.get("xp", 0) == 0:
+                    add_session_xp(15)
+                    msg = format_new_language_message(lang, buddy_display)
+                    messages.append(msg)
 
                 # Persistent affinity XP — always accumulates
                 leveled_up, old_tier, new_tier = add_language_affinity(lang, 3)
