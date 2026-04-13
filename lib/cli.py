@@ -26,8 +26,10 @@ def find_catalog() -> dict:
     pr = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
     candidates = [
         Path(pr) / "lib" / "catalog.json" if pr else None,
-        Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.0/lib/catalog.json",
+        # User-local copy updated by install.sh — checked before stale plugin cache
+        BUDDYMON_DIR / "catalog.json",
         Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.1/lib/catalog.json",
+        Path.home() / ".claude/plugins/cache/circuitforge/buddymon/0.1.0/lib/catalog.json",
         Path.home() / ".claude/plugins/marketplaces/circuitforge/plugins/buddymon/lib/catalog.json",
     ]
     for p in candidates:
@@ -412,89 +414,186 @@ def cmd_catch(args: list[str]):
             print(f"💨 {display} broke free! Weaken it further and try again. ({int(catch_rate * 100)}% catch rate)")
 
 
+def _evo_chain_label(bid: str, owned: dict, catalog: dict) -> str:
+    """Build a short evolution chain string: A → B → C with current marked."""
+    # Walk backwards to find root
+    root = bid
+    while True:
+        prev = owned.get(root, {}).get("evolved_from") or catalog.get("evolutions", {}).get(root, {}).get("evolves_from")
+        if not prev or prev not in owned:
+            break
+        root = prev
+    # Walk forward
+    chain = [root]
+    cur = root
+    while True:
+        nxt = owned.get(cur, {}).get("evolved_into")
+        if not nxt or nxt not in owned:
+            break
+        chain.append(nxt)
+        cur = nxt
+    if len(chain) < 2:
+        return ""
+    return " → ".join(
+        f"[{n}]" if n == bid else n
+        for n in chain
+    )
+
+
 def cmd_roster():
     roster = load(BUDDYMON_DIR / "roster.json")
     owned = roster.get("owned", {})
+    active_bid = get_buddy_id() or load(BUDDYMON_DIR / "active.json").get("buddymon_id")
 
     try:
         catalog = find_catalog()
     except Exception:
         catalog = {}
     mascot_catalog = catalog.get("language_mascots", {})
+    bug_catalog   = catalog.get("bug_monsters", {})
 
-    core_buddymon = {k: v for k, v in owned.items()
-                     if v.get("type") not in ("caught_bug_monster", "caught_language_mascot")}
-    mascots_owned = {k: v for k, v in owned.items() if v.get("type") == "caught_language_mascot"}
-    caught = {k: v for k, v in owned.items() if v.get("type") == "caught_bug_monster"}
+    core_buddymon  = {k: v for k, v in owned.items()
+                      if v.get("type") not in ("caught_bug_monster", "caught_language_mascot")}
+    mascots_owned  = {k: v for k, v in owned.items() if v.get("type") == "caught_language_mascot"}
+    caught_bugs    = {k: v for k, v in owned.items() if v.get("type") == "caught_bug_monster"}
 
-    print("🐾 Your Buddymon")
-    print("─" * 44)
-    for bid, b in core_buddymon.items():
-        lvl = b.get("level", 1)
+    total_owned    = len(core_buddymon) + len(mascots_owned) + len(caught_bugs)
+    bug_total      = len(bug_catalog)
+    mascot_total   = len(mascot_catalog)
+
+    W = 52
+    owned_tag = f"{total_owned} owned"
+    pad = W - 10 - len(owned_tag)
+    print("╔" + "═" * W + "╗")
+    print(f"║  🐾 ROSTER{' ' * pad}{owned_tag}  ║")
+    print("╚" + "═" * W + "╝")
+
+    # ── BUDDYMON ──────────────────────────────────────────────
+    print()
+    print("── BUDDYMON  ✓ levels via XP · assignable " + "─" * 8)
+    for bid, b in sorted(core_buddymon.items(),
+                         key=lambda x: -x[1].get("xp", 0)):
+        lvl      = b.get("level", 1)
         total_xp = b.get("xp", 0)
-        max_xp = lvl * 100
-        xp_in_level = total_xp % max_xp if max_xp else 0
-        bar = xp_bar(xp_in_level, max_xp)
-        display = b.get("display", bid)
+        max_xp   = lvl * 100
+        xp_in    = total_xp % max_xp if max_xp else 0
+        bar      = xp_bar(xp_in, max_xp, width=16)
+        display  = b.get("display", bid)
         affinity = b.get("affinity", "")
-        evo_note = f"  → {b['evolved_into']}" if b.get("evolved_into") else ""
-        print(f"  {display}  Lv.{lvl}  {affinity}{evo_note}")
-        print(f"     XP: [{bar}] {xp_in_level}/{max_xp}")
+        aff_tag  = f"  [{affinity}]" if affinity else ""
 
+        active_tag = "  ← ACTIVE" if bid == active_bid else ""
+        chain      = _evo_chain_label(bid, owned, catalog)
+        chain_tag  = f"  {chain}" if chain else ""
+
+        cat_entry  = catalog.get("buddymon", {}).get(bid) or catalog.get("evolutions", {}).get(bid) or {}
+        evos       = cat_entry.get("evolutions", [])
+        next_evo   = next((e for e in evos if lvl < e.get("level", 999)), None)
+
+        print()
+        print(f"  {display}{aff_tag}{active_tag}")
+        print(f"  {'Lv.' + str(lvl):<8}  XP: [{bar}] {xp_in}/{max_xp}")
+        if chain:
+            print(f"  chain: {chain}")
+        if next_evo:
+            gap = next_evo["level"] - lvl
+            print(f"  → evolves to {next_evo['into']} at Lv.{next_evo['level']}  ({gap} levels to go)")
+        elif b.get("evolved_into") and b["evolved_into"] in owned:
+            print(f"  ✓ fully evolved")
+
+    # ── LANGUAGE MASCOTS ──────────────────────────────────────
+    print()
+    print("── LANGUAGE MASCOTS  ✓ levels via XP · assignable " + "─" * 1)
     if mascots_owned:
-        print()
-        print("🦎 Language Mascots")
-        print("─" * 44)
-        for bid, b in sorted(mascots_owned.items(), key=lambda x: x[1].get("caught_at", ""), reverse=True):
-            display = b.get("display", bid)
-            lang = b.get("language", "")
-            caught_at = b.get("caught_at", "")[:10]
-            lvl = b.get("level", 1)
-            mc = mascot_catalog.get(bid, {})
-            assignable = mc.get("assignable", False)
-            assign_note = "  ✓ assignable as buddy" if assignable else ""
-            evo_chains = mc.get("evolutions", [])
-            evo_note = f"  → evolves at Lv.{evo_chains[0]['level']}" if evo_chains else ""
-            print(f"  {display}  [{lang}]  Lv.{lvl}{assign_note}{evo_note}")
-            print(f"     caught {caught_at}")
+        for bid, b in sorted(mascots_owned.items(),
+                             key=lambda x: -x[1].get("xp", 0)):
+            display  = b.get("display", bid)
+            lang     = b.get("language", "")
+            lvl      = b.get("level", 1)
+            total_xp = b.get("xp", 0)
+            max_xp   = lvl * 100
+            xp_in    = total_xp % max_xp if max_xp else 0
+            bar      = xp_bar(xp_in, max_xp, width=16)
+            mc       = mascot_catalog.get(bid, {})
+            elem     = mc.get("element", "")
+            elem_tag = f"  [{elem}]" if elem else ""
+            evos     = mc.get("evolutions", [])
+            next_evo = next((e for e in evos if lvl < e.get("level", 999)), None)
+            active_tag = "  ← ACTIVE" if bid == active_bid else ""
 
-    if caught:
-        print()
-        print("🏆 Caught Bug Monsters")
-        print("─" * 44)
-        for bid, b in sorted(caught.items(), key=lambda x: x[1].get("caught_at", ""), reverse=True):
-            display = b.get("display", bid)
-            caught_at = b.get("caught_at", "")[:10]
-            print(f"  {display}  — caught {caught_at}")
+            print()
+            print(f"  {display}  [{lang}]{elem_tag}{active_tag}")
+            print(f"  {'Lv.' + str(lvl):<8}  XP: [{bar}] {xp_in}/{max_xp}")
+            if next_evo:
+                print(f"  → evolves to {next_evo['into']} at Lv.{next_evo['level']}")
+    else:
+        print(f"  (none yet — code in Python, JS, Rust… to encounter them)")
+        print(f"  {mascot_total} species to discover across {len(set(m.get('rarity','') for m in mascot_catalog.values()))} rarity tiers")
 
+    # ── LANGUAGE AFFINITIES ───────────────────────────────────
     affinities = roster.get("language_affinities", {})
     if affinities:
         print()
-        print("🗺️  Language Affinities")
-        print("─" * 44)
+        print("── LANGUAGE AFFINITIES  ◑ passive · levels via edits " + "─" * 0)
         for lang, data in sorted(affinities.items(), key=lambda x: -x[1].get("xp", 0)):
-            tier = data.get("tier", "discovering")
-            level = data.get("level", 0)
-            xp = data.get("xp", 0)
-            emoji = TIER_EMOJI.get(tier, "🔭")
-            elem = LANGUAGE_ELEMENTS.get(lang, "")
-            elem_tag = f"  [{elem}]" if elem else ""
-            # Flag languages that have a spawnable mascot
+            tier   = data.get("tier", "discovering")
+            level  = data.get("level", 0)
+            xp     = data.get("xp", 0)
+            emoji  = TIER_EMOJI.get(tier, "🔭")
+            elem   = LANGUAGE_ELEMENTS.get(lang, "")
+            e_tag  = f"[{elem}]" if elem else ""
             has_mascot = any(m.get("language") == lang for m in mascot_catalog.values())
-            mascot_tag = "  🦎" if has_mascot and level >= 1 else ""
-            print(f"  {emoji}  {lang:<12} {tier:<12} (Lv.{level}  · {xp} XP){elem_tag}{mascot_tag}")
+            m_tag  = " 🦎" if has_mascot else ""
+            print(f"  {emoji}  {lang:<13} {tier:<12} Lv.{level:<3} · {xp:>5} XP  {e_tag}{m_tag}")
 
-    bug_total = len(catalog.get("bug_monsters", {}))
-    mascot_total = len(mascot_catalog)
-    missing_bugs = bug_total - len(caught)
+    # ── BUG TROPHY CASE ───────────────────────────────────────
+    print()
+    caught_count = len(caught_bugs)
+    print(f"── BUG TROPHY CASE  ✗ trophies only · no leveling  ({caught_count}/{bug_total}) " + "─" * 0)
+    if caught_bugs:
+        # Sort: notable (level>1 or has XP) first, then alpha
+        def bug_sort_key(item):
+            b = item[1]
+            notable = b.get("level", 1) > 1 or b.get("xp", 0) > 0
+            return (not notable, item[0])
+        items = sorted(caught_bugs.items(), key=bug_sort_key)
+        # Two-column grid — 28 chars gives room for "🦅 ReviewHawk Lv.64 [systems]"
+        COL = 28
+        for i in range(0, len(items), 2):
+            left_id, left  = items[i]
+            right_id, right = items[i + 1] if i + 1 < len(items) else (None, None)
+
+            def cell(bid, b):
+                if b is None:
+                    return ""
+                disp = b.get("display", bid)
+                lvl  = b.get("level", 1)
+                bc   = bug_catalog.get(bid, {})
+                weak = bc.get("weak_against", [])
+                elem = f"[{weak[0]}]" if weak else ""
+                lvl_tag = f" Lv.{lvl}" if lvl > 1 else ""
+                cell_str = f"{disp}{lvl_tag} {elem}"
+                return cell_str[:COL].ljust(COL)
+
+            l = cell(left_id, left)
+            r = cell(right_id, right) if right else ""
+            print(f"  {l}  {r}".rstrip())
+    else:
+        print("  none yet")
+
+    # ── DISCOVERY FOOTER ──────────────────────────────────────
+    missing_bugs    = bug_total    - len(caught_bugs)
     missing_mascots = mascot_total - len(mascots_owned)
     if missing_bugs + missing_mascots > 0:
         parts = []
-        if missing_bugs > 0:
-            parts.append(f"{missing_bugs} bug monsters")
-        if missing_mascots > 0:
-            parts.append(f"{missing_mascots} language mascots")
-        print(f"\n❓ ??? — {' and '.join(parts)} still to discover...")
+        if missing_bugs    > 0: parts.append(f"{missing_bugs} bug monsters")
+        if missing_mascots > 0: parts.append(f"{missing_mascots} mascots")
+        print(f"\n  ❓ ??? — {' and '.join(parts)} still to discover")
+
+    # Signal the Stop hook to re-emit full output as additionalContext (avoids
+    # Bash tool result truncation). The Stop hook reads and clears this file.
+    pending = BUDDYMON_DIR / "roster_pending.txt"
+    pending.write_text("1")
 
 
 def cmd_start(choice: str | None = None):

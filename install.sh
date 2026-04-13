@@ -287,6 +287,9 @@ PYEOF
     chmod +x "${BUDDYMON_DIR}/cli.py"
     ok "Installed cli.py → ${BUDDYMON_DIR}/cli.py"
 
+    cp "${REPO_DIR}/lib/catalog.json" "${BUDDYMON_DIR}/catalog.json"
+    ok "Installed catalog.json → ${BUDDYMON_DIR}/catalog.json"
+
     # Install statusline into settings.json if not already configured
     python3 << PYEOF
 import json
