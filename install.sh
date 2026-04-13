@@ -290,6 +290,16 @@ PYEOF
     cp "${REPO_DIR}/lib/catalog.json" "${BUDDYMON_DIR}/catalog.json"
     ok "Installed catalog.json → ${BUDDYMON_DIR}/catalog.json"
 
+    # Sync hooks-handlers and hooks.json into the live cache so edits take effect
+    # without waiting for a CC plugin-cache refresh. CC re-reads hook scripts on
+    # every invocation but only reads hooks.json at session start.
+    if [[ -d "${CACHE_DIR}/hooks-handlers" ]]; then
+        cp "${REPO_DIR}/hooks-handlers/"*.py "${CACHE_DIR}/hooks-handlers/"
+        cp "${REPO_DIR}/hooks-handlers/"*.sh "${CACHE_DIR}/hooks-handlers/" 2>/dev/null || true
+        cp "${REPO_DIR}/hooks/hooks.json"    "${CACHE_DIR}/hooks/hooks.json"
+        ok "Synced hooks-handlers + hooks.json → ${CACHE_DIR}/"
+    fi
+
     # Install statusline into settings.json if not already configured
     python3 << PYEOF
 import json
