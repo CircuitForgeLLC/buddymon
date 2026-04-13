@@ -23,7 +23,11 @@ SESSION_FILE = BUDDYMON_DIR / "sessions" / f"{SESSION_KEY}.json"
 def get_session_state() -> dict:
     try:
         with open(SESSION_FILE) as f:
-            return json.load(f)
+            data = json.load(f)
+        # Fall through when file exists but buddymon_id is null (pgrp mismatch).
+        if not data.get("buddymon_id"):
+            raise ValueError("null buddymon_id")
+        return data
     except Exception:
         global_active = {}
         try:

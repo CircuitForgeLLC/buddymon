@@ -441,6 +441,14 @@ def _evo_chain_label(bid: str, owned: dict, catalog: dict) -> str:
 
 
 def cmd_roster():
+    import io as _io
+    _buf = _io.StringIO()
+
+    def _p(*args, **kwargs):
+        """print() that writes to the buffer instead of stdout."""
+        kwargs.setdefault("file", _buf)
+        print(*args, **kwargs)
+
     roster = load(BUDDYMON_DIR / "roster.json")
     owned = roster.get("owned", {})
     active_bid = get_buddy_id() or load(BUDDYMON_DIR / "active.json").get("buddymon_id")
@@ -464,13 +472,13 @@ def cmd_roster():
     W = 52
     owned_tag = f"{total_owned} owned"
     pad = W - 10 - len(owned_tag)
-    print("╔" + "═" * W + "╗")
-    print(f"║  🐾 ROSTER{' ' * pad}{owned_tag}  ║")
-    print("╚" + "═" * W + "╝")
+    _p("╔" + "═" * W + "╗")
+    _p(f"║  🐾 ROSTER{' ' * pad}{owned_tag}  ║")
+    _p("╚" + "═" * W + "╝")
 
     # ── BUDDYMON ──────────────────────────────────────────────
-    print()
-    print("── BUDDYMON  ✓ levels via XP · assignable " + "─" * 8)
+    _p()
+    _p("── BUDDYMON  ✓ levels via XP · assignable " + "─" * 8)
     for bid, b in sorted(core_buddymon.items(),
                          key=lambda x: -x[1].get("xp", 0)):
         lvl      = b.get("level", 1)
@@ -484,26 +492,25 @@ def cmd_roster():
 
         active_tag = "  ← ACTIVE" if bid == active_bid else ""
         chain      = _evo_chain_label(bid, owned, catalog)
-        chain_tag  = f"  {chain}" if chain else ""
 
         cat_entry  = catalog.get("buddymon", {}).get(bid) or catalog.get("evolutions", {}).get(bid) or {}
         evos       = cat_entry.get("evolutions", [])
         next_evo   = next((e for e in evos if lvl < e.get("level", 999)), None)
 
-        print()
-        print(f"  {display}{aff_tag}{active_tag}")
-        print(f"  {'Lv.' + str(lvl):<8}  XP: [{bar}] {xp_in}/{max_xp}")
+        _p()
+        _p(f"  {display}{aff_tag}{active_tag}")
+        _p(f"  {'Lv.' + str(lvl):<8}  XP: [{bar}] {xp_in}/{max_xp}")
         if chain:
-            print(f"  chain: {chain}")
+            _p(f"  chain: {chain}")
         if next_evo:
             gap = next_evo["level"] - lvl
-            print(f"  → evolves to {next_evo['into']} at Lv.{next_evo['level']}  ({gap} levels to go)")
+            _p(f"  → evolves to {next_evo['into']} at Lv.{next_evo['level']}  ({gap} levels to go)")
         elif b.get("evolved_into") and b["evolved_into"] in owned:
-            print(f"  ✓ fully evolved")
+            _p(f"  ✓ fully evolved")
 
     # ── LANGUAGE MASCOTS ──────────────────────────────────────
-    print()
-    print("── LANGUAGE MASCOTS  ✓ levels via XP · assignable " + "─" * 1)
+    _p()
+    _p("── LANGUAGE MASCOTS  ✓ levels via XP · assignable " + "─" * 1)
     if mascots_owned:
         for bid, b in sorted(mascots_owned.items(),
                              key=lambda x: -x[1].get("xp", 0)):
@@ -521,20 +528,20 @@ def cmd_roster():
             next_evo = next((e for e in evos if lvl < e.get("level", 999)), None)
             active_tag = "  ← ACTIVE" if bid == active_bid else ""
 
-            print()
-            print(f"  {display}  [{lang}]{elem_tag}{active_tag}")
-            print(f"  {'Lv.' + str(lvl):<8}  XP: [{bar}] {xp_in}/{max_xp}")
+            _p()
+            _p(f"  {display}  [{lang}]{elem_tag}{active_tag}")
+            _p(f"  {'Lv.' + str(lvl):<8}  XP: [{bar}] {xp_in}/{max_xp}")
             if next_evo:
-                print(f"  → evolves to {next_evo['into']} at Lv.{next_evo['level']}")
+                _p(f"  → evolves to {next_evo['into']} at Lv.{next_evo['level']}")
     else:
-        print(f"  (none yet — code in Python, JS, Rust… to encounter them)")
-        print(f"  {mascot_total} species to discover across {len(set(m.get('rarity','') for m in mascot_catalog.values()))} rarity tiers")
+        _p(f"  (none yet — code in Python, JS, Rust… to encounter them)")
+        _p(f"  {mascot_total} species to discover across {len(set(m.get('rarity','') for m in mascot_catalog.values()))} rarity tiers")
 
     # ── LANGUAGE AFFINITIES ───────────────────────────────────
     affinities = roster.get("language_affinities", {})
     if affinities:
-        print()
-        print("── LANGUAGE AFFINITIES  ◑ passive · levels via edits " + "─" * 0)
+        _p()
+        _p("── LANGUAGE AFFINITIES  ◑ passive · levels via edits " + "─" * 0)
         for lang, data in sorted(affinities.items(), key=lambda x: -x[1].get("xp", 0)):
             tier   = data.get("tier", "discovering")
             level  = data.get("level", 0)
@@ -544,12 +551,12 @@ def cmd_roster():
             e_tag  = f"[{elem}]" if elem else ""
             has_mascot = any(m.get("language") == lang for m in mascot_catalog.values())
             m_tag  = " 🦎" if has_mascot else ""
-            print(f"  {emoji}  {lang:<13} {tier:<12} Lv.{level:<3} · {xp:>5} XP  {e_tag}{m_tag}")
+            _p(f"  {emoji}  {lang:<13} {tier:<12} Lv.{level:<3} · {xp:>5} XP  {e_tag}{m_tag}")
 
     # ── BUG TROPHY CASE ───────────────────────────────────────
-    print()
+    _p()
     caught_count = len(caught_bugs)
-    print(f"── BUG TROPHY CASE  ✗ trophies only · no leveling  ({caught_count}/{bug_total}) " + "─" * 0)
+    _p(f"── BUG TROPHY CASE  ✗ trophies only · no leveling  ({caught_count}/{bug_total}) " + "─" * 0)
     if caught_bugs:
         # Sort: notable (level>1 or has XP) first, then alpha
         def bug_sort_key(item):
@@ -557,7 +564,8 @@ def cmd_roster():
             notable = b.get("level", 1) > 1 or b.get("xp", 0) > 0
             return (not notable, item[0])
         items = sorted(caught_bugs.items(), key=bug_sort_key)
-        # Two-column grid — 28 chars gives room for "🦅 ReviewHawk Lv.64 [systems]"
+        # Two-column grid — 28 chars per column; cap at COL so long names don't push
+        # the right column out of alignment.
         COL = 28
         for i in range(0, len(items), 2):
             left_id, left  = items[i]
@@ -572,14 +580,14 @@ def cmd_roster():
                 weak = bc.get("weak_against", [])
                 elem = f"[{weak[0]}]" if weak else ""
                 lvl_tag = f" Lv.{lvl}" if lvl > 1 else ""
-                cell_str = f"{disp}{lvl_tag} {elem}"
+                cell_str = f"{disp}{lvl_tag} {elem}".strip()
                 return cell_str[:COL].ljust(COL)
 
             l = cell(left_id, left)
             r = cell(right_id, right) if right else ""
-            print(f"  {l}  {r}".rstrip())
+            _p(f"  {l}  {r}".rstrip())
     else:
-        print("  none yet")
+        _p("  none yet")
 
     # ── DISCOVERY FOOTER ──────────────────────────────────────
     missing_bugs    = bug_total    - len(caught_bugs)
@@ -588,12 +596,22 @@ def cmd_roster():
         parts = []
         if missing_bugs    > 0: parts.append(f"{missing_bugs} bug monsters")
         if missing_mascots > 0: parts.append(f"{missing_mascots} mascots")
-        print(f"\n  ❓ ??? — {' and '.join(parts)} still to discover")
+        _p(f"\n  ❓ ??? — {' and '.join(parts)} still to discover")
 
-    # Signal the Stop hook to re-emit full output as additionalContext (avoids
-    # Bash tool result truncation). The Stop hook reads and clears this file.
-    pending = BUDDYMON_DIR / "roster_pending.txt"
-    pending.write_text("1")
+    # Write roster output to a file for the Stop hook to deliver as additionalContext.
+    # The Stop hook reads roster_output.txt directly — it does NOT re-run this command,
+    # avoiding any recursive flag-write loop.
+    output_text = _buf.getvalue()
+    roster_output = BUDDYMON_DIR / "roster_output.txt"
+    roster_pending = BUDDYMON_DIR / "roster_pending.txt"
+    roster_output.write_text(output_text)
+    roster_pending.write_text("1")
+
+    # Print to stdout only when running interactively (direct terminal use).
+    # When called from a skill via Bash (piped), output is silent — the Stop
+    # hook delivers it as additionalContext instead.
+    if sys.stdout.isatty():
+        sys.stdout.write(output_text)
 
 
 def cmd_start(choice: str | None = None):

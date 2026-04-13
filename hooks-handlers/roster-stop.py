@@ -7,14 +7,12 @@ If present, runs the roster CLI and emits full output as additionalContext,
 guaranteeing the full roster is visible without Bash-tool truncation.
 """
 import json
-import os
-import subprocess
 import sys
 from pathlib import Path
 
-BUDDYMON_DIR = Path.home() / ".claude" / "buddymon"
-PENDING_FLAG  = BUDDYMON_DIR / "roster_pending.txt"
-CLI           = BUDDYMON_DIR / "cli.py"
+BUDDYMON_DIR   = Path.home() / ".claude" / "buddymon"
+PENDING_FLAG   = BUDDYMON_DIR / "roster_pending.txt"
+OUTPUT_FILE    = BUDDYMON_DIR / "roster_output.txt"
 
 
 def main():
@@ -26,16 +24,16 @@ def main():
     if not PENDING_FLAG.exists():
         sys.exit(0)
 
+    # Clear both files before reading — prevents a second Stop event from
+    # re-delivering the same roster if OUTPUT_FILE lingers.
     PENDING_FLAG.unlink(missing_ok=True)
 
-    if not CLI.exists():
+    if not OUTPUT_FILE.exists():
         sys.exit(0)
 
-    result = subprocess.run(
-        ["python3", str(CLI), "roster"],
-        capture_output=True, text=True, timeout=10,
-    )
-    output = result.stdout.strip()
+    output = OUTPUT_FILE.read_text().strip()
+    OUTPUT_FILE.unlink(missing_ok=True)
+
     if not output:
         sys.exit(0)
 
