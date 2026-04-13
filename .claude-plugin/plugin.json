@@ -1,7 +1,7 @@
 {
   "name": "buddymon",
-  "description": "Collectible creatures discovered through coding — commit streaks, bug fights, and session challenges",
-  "version": "0.2.1",
+  "description": "Collectible creatures discovered through coding \u2014 commit streaks, bug fights, and session challenges",
+  "version": "0.2.2",
   "author": {
     "name": "CircuitForge LLC",
     "email": "hello@circuitforge.tech"
